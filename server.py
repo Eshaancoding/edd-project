@@ -1,121 +1,74 @@
+from pprint import pprint
+from json import load
 import uvicorn 
 from fastapi import FastAPI
 from gensim.models import Word2Vec, KeyedVectors
 from scipy.spatial.distance import cosine
 import numpy as np
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db
+from contextlib import asynccontextmanager
 
-# Load pre-trained Word2Vec model (e.g., Google News vectors)
-# Ensure you have downloaded Google News vectors or another pretrained model
-model_path = 'path/to/GoogleNews-vectors-negative300.bin'
-model = KeyedVectors.load_word2vec_format(model_path, binary=True)
+# =====================================================================
+# ==                       Similarity Score                          ==
+# =====================================================================
+# model_path = './GoogleNews-vectors-negative300.bin'
+# model = KeyedVectors.load_word2vec_format(model_path, binary=True)
 
-app = FastAPI()
+# def average_vector(interests):
+#     vectors = [model[word] for word in interests if word in model]
+#     if not vectors:  # In case no words are found in the model
+#         return np.zeros(model.vector_size)
+#     return np.mean(vectors, axis=0)
 
-# sample data for now; later read from mongo or something.
-data = {
-    "eshaan": {
-        "interests": [
-            "Programming",
-            "Swimming",
-            "Water",
-            "Reinforcement Learning",
-            "Yay"
-        ],
-        "deviceId": ""
-    },
-    "sophia liang": {
-        "interests": [
-            "Data Science",
-            "Cycling",
-            "Machine Learning",
-            "Artificial Intelligence",
-            "Gardening"
-        ],
-        "deviceId": ""
-    },
-    "liam carter": {
-        "interests": [
-            "Web Development",
-            "Hiking",
-            "Gaming",
-            "Machine Learning",
-            "Digital Art"
-        ],
-        "deviceId": ""
-    },
-    "olivia ray": {
-        "interests": [
-            "Cybersecurity",
-            "Swimming",
-            "Photography",
-            "Blockchain",
-            "Space"
-        ],
-        "deviceId": ""
-    },
-    "noah patel": {
-        "interests": [
-            "Cloud Computing",
-            "Soccer",
-            "AI Ethics",
-            "Cryptography",
-            "Cooking"
-        ],
-        "deviceId": ""
-    },
-    "mia johnson": {
-        "interests": [
-            "Biotechnology",
-            "Running",
-            "Data Visualization",
-            "Programming",
-            "Science Fiction"
-        ],
-        "deviceId": ""
-    }
-}
+# # interests are lists 
+# def calculate_score (person1_interests, person2_interests):
+#     # Calculate average vectors for both people
+#     person1_vector = average_vector(person1_interests)
+#     person2_vector = average_vector(person2_interests)
 
+#     # Calculate cosine similarity
+#     return 1 - cosine(person1_vector, person2_vector)
 
-def average_vector(interests):
-    vectors = [model[word] for word in interests if word in model]
-    if not vectors:  # In case no words are found in the model
-        return np.zeros(model.vector_size)
-    return np.mean(vectors, axis=0)
+# =====================================================================
+# ==                     Connect to Firebase                         ==
+# =====================================================================
 
-# interests are lists 
-def calculate_score (person1_interests, person2_interests):
-    # Calculate average vectors for both people
-    person1_vector = average_vector(person1_interests)
-    person2_vector = average_vector(person2_interests)
+cred = None
+ref = None
 
-    # Calculate cosine similarity
-    similarity_score = 1 - cosine(person1_vector, person2_vector)
+@asynccontextmanager
+async def connect_to_firebase (app: FastAPI): 
+    global cred, ref
+    print("Connecting to firebase...")
+    cred = credentials.Certificate('edd-project-f9d25-firebase-adminsdk-5j8or-af0ed4174f.json')
+    firebase_admin.initialize_app(cred, {
+        'databaseURL': "https://edd-project-f9d25-default-rtdb.firebaseio.com",
+    })
+    ref = db.reference("participants")
+    print("done")
+    yield
 
-@app.get("/")
-def read_root():
-    return "Name tag two"
+# =====================================================================
+# ==                             App                                 ==
+# =====================================================================
+app = FastAPI(lifespan=connect_to_firebase)
 
-@app.get("/test-name")
-def read_root():
-    return "Name tag one"
-
-
-@app.get("/get_status")
-def get_status (deviceId:str):
-    d = None
-    name = ""
-    for v in data:
-        if v["deviceId"] == deviceId:
-            d = data[v]
-
-    return {
-        "first_name": name,
-        "second_name": d[""]
-    }
-
-@app.get("/set_device_id")
-def set_device_id (name: str, device_id: str):
-    data[name]["deviceId"] = device_id
+@app.get("/status")
+def status (device_id:str): 
+    data = ref.get()
+    n = None
+    if data != None:
+        for i in data:
+            d = data[i]
+            if d['deviceId'] == device_id:
+                n = d["name"]
+    
+    if n == None:
+        return ""
+    else:
+        return n + ",Ignore this"
 
 if __name__ == "__main__":
     uvicorn.run(
