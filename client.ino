@@ -16,9 +16,6 @@ String ssid = "eshaan";
 String password = "765ESHAAN";
 
 
-String first = "Harrison";
-String second = "Eshaan";
-
 TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup.h
 
 void setup(void) {
@@ -112,7 +109,6 @@ void loop() {
     tft.drawCentreString("Device ID:", 170, 60, 4);
     tft.drawCentreString(device_id, 170, 100, 4);
     delay(1000); // ping server every 1 seconds to update whether connected or not
-
   }
 }
 
@@ -150,3 +146,4 @@ void loop() {
 //   all copies or substantial portions of the Software.
 // */
 // // ESP32 open server on port 10000 to receive a flaot
+
