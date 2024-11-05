@@ -2,13 +2,13 @@ from pprint import pprint
 from json import load
 import uvicorn 
 from fastapi import FastAPI
-from gensim.models import Word2Vec, KeyedVectors
 from scipy.spatial.distance import cosine
 import numpy as np
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from contextlib import asynccontextmanager
+import gensim.downloader as api
 
 # =====================================================================
 # ==                       Similarity Score                          ==
@@ -37,10 +37,17 @@ from contextlib import asynccontextmanager
 
 cred = None
 ref = None
+wv = None
 
 @asynccontextmanager
-async def connect_to_firebase (app: FastAPI): 
-    global cred, ref
+async def init (app: FastAPI): 
+    global cred, ref, wv
+    
+    # print("Downloading google news")
+    # wv = api.load('word2vec-google-news-300')
+    # vec_king = wv['king']
+    # print(vec_king)
+
     print("Connecting to firebase...")
     cred = credentials.Certificate('edd-project-f9d25-firebase-adminsdk-5j8or-af0ed4174f.json')
     firebase_admin.initialize_app(cred, {
@@ -53,7 +60,7 @@ async def connect_to_firebase (app: FastAPI):
 # =====================================================================
 # ==                             App                                 ==
 # =====================================================================
-app = FastAPI(lifespan=connect_to_firebase)
+app = FastAPI(lifespan=init)
 
 @app.get("/status")
 def status (device_id:str): 
@@ -70,7 +77,14 @@ def status (device_id:str):
     else:
         return n + ",Ignore this"
 
+
+"""
+netsh interface portproxy add v4tov4 listenport=8765 listenaddress=0.0.0.0 connectport=8765 connectaddress=172.19.62.87
+Need to run this: https://learn.microsoft.com/en-us/windows/wsl/networking
+"""
+
 if __name__ == "__main__":
+
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
