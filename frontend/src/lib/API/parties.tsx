@@ -11,18 +11,33 @@ export function onPartiesList(db: Database, callback: (data: any) => void) {
   return get(ref_parties);
 }
 
-export function createParty(db: Database, name: string, description: string) {
-  let ref_parties = ref(db, "parties");
-  push(ref_parties, {
+export function createParty (
+  db: Database, 
+  name: string, 
+  description: string, 
+  location: string,
+  currentUser: string
+) {
+
+  let partyId = generateId()
+  let ref_parties = child(ref(db, "parties"), partyId);
+  set(ref_parties, {
     name: name,
-    partyId: generateId(),
+    currentUser: currentUser,
+    location: location,
+    partyId: partyId,
     description: description,
     participants: []
   });
 }
 
 // Join a party by adding profileId to the participants list
-export async function joinParty(db: Database, profileId: string, partyId: string) {
+export async function joinParty(
+  db: Database, 
+  name:string, 
+  profileId: string, 
+  partyId: string
+) {
   const ref_party = child(ref(db, "parties"), partyId);
 
   try {
@@ -31,7 +46,10 @@ export async function joinParty(db: Database, profileId: string, partyId: string
       const partyData = snapshot.val();
       const participants = partyData.participants || [];
       if (!participants.includes(profileId)) {
-        participants.push(profileId);  
+        participants.push({
+          profileId: profileId,
+          name: name
+        });  
         await update(ref_party, { participants });
       }
     } else {

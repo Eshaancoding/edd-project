@@ -12,9 +12,8 @@ export async function signUpUser (
     interests: string[]
 ) {
     let data = await createUserWithEmailAndPassword(auth, email, password) 
-
-    let ref_users = ref(db, "users") // this is the metadata
-    push(ref_users, {
+    
+    set(ref(db, "users/" + data.user.uid), {
         userId: data.user.uid,
         name: name,
         email: email,
@@ -33,18 +32,6 @@ export async function signInUser (
 }
 
 export async function getUserMetadata (db: Database, userId: string) {
-    const ref_users = ref(db, "users"); //
-
-    try {
-        const snapshot = await get(child(ref_users, userId));
-        if (snapshot.exists()) {
-            return snapshot.val();
-        } else {
-            console.log("No user found with this userId.");
-            return null; // hi dog
-        }
-    } catch (error) {
-        console.error("Error fetching user data:", error);
-        return null;
-    }
+    let data = await get(ref(db, "users/" + userId))
+    return data.val()
 }
