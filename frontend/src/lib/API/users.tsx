@@ -1,16 +1,21 @@
 import { getDatabase, ref, push, child, get, update, Database, DataSnapshot, set } from 'firebase/database';
 import { generateId } from '../helper';
+import { type Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
-export function signUpUsers (
+export async function signUpUser (
     db:Database, 
+    auth:Auth,
     name:string,
     email:string,
     phone:string,
+    password:string,
     interests: string[]
 ) {
-    let ref_users = ref(db, "users")
+    let data = await createUserWithEmailAndPassword(auth, email, password) 
+
+    let ref_users = ref(db, "users") // this is the metadata
     push(ref_users, {
-        userId: generateId(),
+        userId: data.user.uid,
         name: name,
         email: email,
         phone: phone,
@@ -18,8 +23,17 @@ export function signUpUsers (
     })
 }
 
-export async function getUserInfo(db: Database, userId: string) {
-    const ref_users = ref(db, "users");
+export async function signInUser (
+    auth: Auth,
+    email: string,
+    password: string
+) {
+    let result = await signInWithEmailAndPassword(auth, email, password)
+    return result.user.uid
+}
+
+export async function getUserMetadata (db: Database, userId: string) {
+    const ref_users = ref(db, "users"); //
 
     try {
         const snapshot = await get(child(ref_users, userId));
@@ -27,7 +41,7 @@ export async function getUserInfo(db: Database, userId: string) {
             return snapshot.val();
         } else {
             console.log("No user found with this userId.");
-            return null;
+            return null; // hi dog
         }
     } catch (error) {
         console.error("Error fetching user data:", error);
