@@ -16,7 +16,7 @@
         }
 
         if (auth.currentUser == null) goto("/login")
-        else {
+        else if (name.length == 0) {
             start()
             onMessagingUpdate(db, auth.currentUser!.uid, $page.params.slug, (data:any) => {
                 msgs = data

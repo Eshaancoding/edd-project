@@ -24,6 +24,7 @@ export async function signUpUser (
     })
 
     // set server to set the user embeddings -- async
+    // this could be replaced by using the api.jina directly...
     GET("setUserVector", {
         "userId": data.user.uid,
         "interestOne": interests[0],

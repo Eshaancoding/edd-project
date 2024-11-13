@@ -10,7 +10,7 @@
     
     $effect(() => {
         if (auth.currentUser == null) goto("/")
-        else {
+        else if (partiesJoined.length == 0) {
             onPartiesList(db, (data:any) => {
                 d = data
                 partiesJoined = []

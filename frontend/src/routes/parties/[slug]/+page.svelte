@@ -9,14 +9,14 @@
     let partyInfo = $state({} as any)
     
     $effect(() => {
-        async function a () { 
+        async function getPartyInfo () { 
             partyInfo = await getParty(db, partyId) 
             console.log(partyInfo)
         }
         
         if (auth.currentUser == null) goto("/")
-        else {
-            a()
+        else if (Object.keys(partyInfo).length == 0) {
+            getPartyInfo()
         }
     })
 

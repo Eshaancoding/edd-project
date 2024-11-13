@@ -21,7 +21,7 @@
             console.log(data)
         }
         if (auth.currentUser == null) goto("/")
-        else {
+        else if (email.length == 0) {
             start()
         }
     })
