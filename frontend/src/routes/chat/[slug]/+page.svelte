@@ -20,7 +20,6 @@
             start()
             onMessagingUpdate(db, auth.currentUser!.uid, $page.params.slug, (data:any) => {
                 msgs = data
-                console.log(data)
             })
         }
     })

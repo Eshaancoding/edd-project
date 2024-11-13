@@ -17,8 +17,6 @@
             name = data.name
             email = data.email 
             interests = data.interests
-
-            console.log(data)
         }
         if (auth.currentUser == null) goto("/")
         else if (email.length == 0) {

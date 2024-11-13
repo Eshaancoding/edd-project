@@ -5,11 +5,13 @@ import { FirebaseError } from 'firebase/app';
 
 // if connected to device, it will return a string (the device id). 
 // If it not, it will return an Object
+
+
 export async function onAvailableDevices (
     db: Database, 
     userId: string,
     partyId: string,
-    callback: (data: any) => void
+    fnCallback: (data: any, isConnected: boolean) => void
 ) {
     onValue(ref(db, "devices"), (snapshot) => {
         const data = snapshot.val();
@@ -26,10 +28,57 @@ export async function onAvailableDevices (
             }
         })
 
-        callback(connectedDevice.length > 0 ? connectedDevice : finalData) 
+        fnCallback(connectedDevice.length > 0 ? connectedDevice : finalData, connectedDevice.length > 0) 
     }) 
 }
 
-export async function unregisterDevice (db: Database) {
+export async function unregisterDevice (
+    db: Database,
+    deviceId: string
+) {
+    let data:any = (await get(ref(db, "devices"))).val() 
 
+    console.log("data")
+    console.log(data)
+
+    data[deviceId] = {
+        "partyId": "None",
+        "userId": "None",
+        "display": "",
+        "name": ""
+    }
+    await set(ref(db, "devices"), data)
+}
+
+export async function registerDevice (
+    db: Database,
+    name: string,
+    display: string,
+    userId: string,
+    partyId: string,
+    deviceId: string
+)
+{
+    let data:any = (await get(ref(db, "devices"))).val() 
+
+    console.log("data")
+    console.log(data)
+
+    data[deviceId] = {
+        "partyId": partyId,
+        "userId": userId,
+        "display": display,
+        "name": name
+    }
+    await set(ref(db, "devices"), data)
+}
+
+export async function updateDisplayName (
+    db: Database,
+    deviceId: string,
+    displayName: string
+) {
+    let data:any = (await get(ref(db, "devices"))).val() 
+    data[deviceId]["display"] = displayName 
+    await set(ref(db, "devices"), data)
 }

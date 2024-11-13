@@ -13,11 +13,9 @@
         if (auth.currentUser == null) goto("/")
         else {
             onPartiesList(db, (data:any) => {
-                console.log(auth.currentUser!.uid)
                 d = data
                 partiesJoined = []
                 Object.keys(data).forEach((partyId:string) => {
-                    console.log(data[partyId].participants)
                     data[partyId].participants.forEach((element:any) => {
                         if (element.profileId == auth.currentUser!.uid) {
                             partiesJoined.push(partyId) 
@@ -25,7 +23,6 @@
                     });
                 }); 
 
-                console.log(partiesJoined)
             })
         }
     }

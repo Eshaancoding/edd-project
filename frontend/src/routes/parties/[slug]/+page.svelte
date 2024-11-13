@@ -5,31 +5,45 @@
     import { goto } from "$app/navigation";
     import { getUserMetadata } from "$lib/API/users";
     import { cosineSimilarity } from "$lib/helper"
-    import { onAvailableDevices } from "$lib/API/devices"
+    import { 
+        onAvailableDevices, 
+        registerDevice, 
+        unregisterDevice,
+        updateDisplayName
+    } from "$lib/API/devices"
 
     let partyId = $page.params.slug
     let partyInfo = $state({} as any)
     let userMetaData = $state({} as any)
     let availableDevices = $state([] as any[])
     let connectedDevice = $state("")
+    let sortedPartipants = $state([] as any[])
     
     $effect(() => {
         async function getInfo () { 
             // get party information and user meta data
-            partyInfo = await getParty(db, partyId) 
-            userMetaData = {}
-            for (let i = 0; i < partyInfo.participants.length; i++) {
-                userMetaData[partyInfo.participants[i].profileId] = await getUserMetadata(db, partyInfo.participants[i].profileId)
+            let pi = await getParty(db, partyId) 
+            console.log(pi)
+            let metadata = {} as any
+            for (let i = 0; i < pi.participants.length; i++) {
+                let data = await getUserMetadata(db, pi.participants[i].profileId)
+                metadata[pi.participants[i].profileId] = data
             }
+            sortedPartipants = sortPartipants(pi.participants, metadata)
 
             // update available devices
-            onAvailableDevices(db, (data:any) => {
-                if (data instanceof String) { // 
-                    connectedDevice = data            
-                } else {
+            onAvailableDevices(db, auth.currentUser!.uid, partyId, (data: any, isConnected:boolean) => {
+                console.log(isConnected)
+                if (isConnected) {
+                    connectedDevice = data
+                }
+                else {
                     availableDevices = data
                 }
             }) 
+
+            userMetaData = metadata
+            partyInfo = pi
         }
         
         if (auth.currentUser == null) goto("/")
@@ -38,11 +52,12 @@
         }
     })
 
+
     function sortPartipants (arr:any[], metadata:any) {
         let res = [] as any[]
 
-        if (Object.keys(metadata).length == 0) return []
-        if (Object.keys(arr).length == 0) return []
+        if (metadata == null || Object.keys(metadata).length == 0) return []
+        if (arr == null || Object.keys(arr).length == 0) return []
 
         arr.forEach((partipant:any) => {
             if (partipant.profileId != auth.currentUser!.uid) {
@@ -57,12 +72,22 @@
             }
         });
 
-        return res.sort((a, b) => b.similarity - a.similarity)
+
+        let sortedData = res.sort((a, b) => b.similarity - a.similarity)
+
+        if (connectedDevice.length > 0) { // connected to device
+            updateDisplayName(
+                db,
+                connectedDevice,
+                sortedData[0].name
+            )
+        }
+
+        return sortedData
+
     }
 
-    function registerDevice () {
-        
-    }
+    $effect(() => console.log(connectedDevice))
 
 </script>
 
@@ -73,20 +98,42 @@
         <p>At: {partyInfo.location}</p> <br />
         
         <div class="p-4 rounded-[15px] bg-slate-100 m-4">
-            <p class="font-bold py-2">Register Device</p>
-            <div class="flex flex-col gap-4">
-                {#each Object.keys(availableDevices) as device}
-                    <div class="flex flex-row bg-slate-200 items-center w-full p-2 rounded-[15px] justify-between">
-                        <p class="mx-2">{device}</p>
-                        <button class="bg-blue-500 p-2 px-4 text-white rounded-[15px]">Register</button>
-                    </div>
-                {/each} 
-            </div>
+            {#if connectedDevice.length > 0}
+                <div class="flex flex-row justify-between">
+                    <p class="py-2"><span class="font-bold">Connected Device: </span> {connectedDevice}</p>
+                    <button
+                        onclick={() => {unregisterDevice(db, connectedDevice); connectedDevice = ""}} 
+                        class="bg-blue-500 p-2 px-4 text-white rounded-[15px]"
+                    >
+                        Disconnect
+                    </button> 
+                </div>
+            {:else}
+                <p class="font-bold py-2">Register Device</p>
+                <div class="flex flex-col gap-4">
+                    {#each Object.keys(availableDevices) as device}
+                        <div class="flex flex-row bg-slate-200 items-center w-full p-2 rounded-[15px] justify-between">
+                            <p class="mx-2">{device}</p>
+                            <button 
+                                onclick={() => registerDevice(
+                                    db, 
+                                    userMetaData[auth.currentUser!.uid]["name"],
+                                    sortedPartipants[0].name,
+                                    auth.currentUser!.uid, 
+                                    partyId, 
+                                    device
+                                )}
+                                class="bg-blue-500 p-2 px-4 text-white rounded-[15px]"
+                            >Register</button>
+                        </div>
+                    {/each} 
+                </div>
+            {/if}
         </div>
         <br />
 
         <p>You should meet (most similar): </p>
-        {#each sortPartipants(partyInfo.participants, userMetaData) as partipant}
+        {#each sortedPartipants as partipant}
             <div class="p-4 rounded-[15px] bg-slate-100 m-4">
                 <p class="font-bold py-2">{partipant.name} ({Math.round(partipant.similarity*100)}% similarity)</p>
                 <div class="flex flex-row gap-4">
