@@ -64,6 +64,8 @@ def get_embeddings (interests):
     for i in range(len(d)):
         t = interests[d[i]["index"]]
         ems += np.array(d[i]["embedding"])
+
+    ems /= 5 # average
     
     return ems.tolist()
 
