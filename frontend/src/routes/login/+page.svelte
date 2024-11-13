@@ -1,6 +1,6 @@
 <script>
     import { goto } from "$app/navigation";
-    import {signInUser, signUpUser} from "$lib/API/users"    
+    import {signInUser } from "$lib/API/users"    
     import {db, auth} from "$lib/firebase"
     import { redirect } from "@sveltejs/kit";
 

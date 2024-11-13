@@ -1,9 +1,11 @@
-<script>
+<script lang="ts">
     import { goto } from "$app/navigation";
     import {signUpUser} from "$lib/API/users"    
     import {db, auth} from "$lib/firebase"
     import { redirect } from "@sveltejs/kit";
 
+    let signingUpStatus = ""
+    
     let name = ""
     let email = ""
     let phone = ""
@@ -21,7 +23,7 @@
             interestThree,
             interestFour,
             interestFive
-        ])
+        ], (status:string) => { signingUpStatus = status })
         goto("/parties")
     }
 </script>
@@ -77,9 +79,18 @@
     </div>
 </div>
 
-<button 
-    on:click={signUpClick}
-    class="relative left-[50%] -translate-x-[50%] w-[100px] text-center px-4 py-2 bg-blue-500 rounded-[15px] text-white"
->
-    Sign up
-</button>
+{#if signingUpStatus.length > 0}
+    <div 
+        class="relative left-[50%] -translate-x-[50%] px-4 text-center px-4 py-2 bg-slate-400 rounded-[15px] text-slate-600"
+    >
+        {signingUpStatus}
+    </div>
+
+{:else}
+    <button 
+        on:click={signUpClick}
+        class="relative left-[50%] -translate-x-[50%] w-[100px] text-center px-4 py-2 bg-blue-500 rounded-[15px] text-white"
+    >
+        Sign up
+    </button>
+{/if}
