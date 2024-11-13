@@ -60,19 +60,19 @@ export async function joinParty(
   }
 }
 
-export async function getParticipants(db: Database, partyId: string) {
+export async function getParty (db: Database, partyId: string) {
   const ref_party = child(ref(db, "parties"), partyId);
   try {
     const snapshot = await get(ref_party);
     if (snapshot.exists()) {
       const partyData = snapshot.val();
-      return partyData.participants || [];
+      return partyData || [];
     } else {
       console.log("Party not found.");
       return [];
     }
   } catch (error) {
-    console.error("Error getting participants:", error);
+    console.error("Error getting party:", error);
     return [];
   }
 }

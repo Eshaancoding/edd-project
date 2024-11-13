@@ -37,11 +37,11 @@ import requests
 # =====================================================================
 
 cred = None
-ref = None
+ref_users = None
 ref_matches = None
 wv = None
 
-def get_embeddings (texts):
+def get_embeddings (interests):
     # free embeddings??
 
     url = 'https://api.jina.ai/v1/embeddings'
@@ -55,29 +55,29 @@ def get_embeddings (texts):
         "dimensions": 1024,
         "late_chunking": True,
         "embedding_type": "float",
-        "input": texts
+        "input": interests
     }
     response = requests.post(url, json=data, headers=headers).json()
     d = response['data']
     
     ems = np.zeros((1, 1024))
     for i in range(len(d)):
-        t = texts[d[i]["index"]]
+        t = interests[d[i]["index"]]
         ems += np.array(d[i]["embedding"])
     
-    return ems
+    return ems.tolist()
 
 
 @asynccontextmanager
 async def init (app: FastAPI): 
-    global cred, ref, ref_matches, wv
+    global cred, ref_users, ref_matches, wv
     
     print("Connecting to firebase...")
     cred = credentials.Certificate('edd-project-f9d25-firebase-adminsdk-5j8or-af0ed4174f.json')
     firebase_admin.initialize_app(cred, {
         'databaseURL': "https://edd-project-f9d25-default-rtdb.firebaseio.com",
     })
-    ref = db.reference("participants")
+    ref_users = db.reference("users")
     ref_matches = db.reference("matches")
     print("done")
     yield
@@ -124,35 +124,55 @@ def cosine_similarity (vector1, vector2):
 
     return cosine_similarity
 
-@app.get("/getSimilarity")
-def getSimilarity ():
-    data = ref.get()
+# @app.get("/getSimilarity")
+# def getSimilarity ():
+#     data = ref.get()
    
-    n_embds = {}
-    for random_id in data:
-        d = data[random_id] 
-        n = d['name']
-        ems = get_embeddings(d['interests']) # np array of 1, 1024
-        n_embds[n] = ems
+#     n_embds = {}
+#     for random_id in data:
+#         d = data[random_id] 
+#         n = d['name']
+#         ems = get_embeddings(d['interests']) # np array of 1, 1024
+#         n_embds[n] = ems
 
-    # find matches
-    matches = {}
-    names_already_done = []    
+#     # find matches
+#     matches = {}
+#     names_already_done = []    
 
-    for source_name in n_embds:
-        arr = []
-        for sink_name in n_embds:
-            if source_name == sink_name: 
-                continue # don't compare person A with person A
+#     for source_name in n_embds:
+#         arr = []
+#         for sink_name in n_embds:
+#             if source_name == sink_name: 
+#                 continue # don't compare person A with person A
 
-            similarity = cosine_similarity(n_embds[source_name], n_embds[sink_name])
-            arr.append((sink_name, similarity))  
+#             similarity = cosine_similarity(n_embds[source_name], n_embds[sink_name])
+#             arr.append((sink_name, similarity))  
         
-        matches[source_name] = arr
+#         matches[source_name] = arr
 
-    ref_matches.set(matches)
+#     ref_matches.set(matches)
 
-    return "Completed"
+#     return "Completed"
+
+@app.get("/setUserVector")
+def setUserVector (
+    userId: str ,
+    interestOne: str,
+    interestTwo: str,
+    interestThree: str,
+    interestFour: str,
+    interestFive: str,
+):
+    ems = get_embeddings([
+        interestOne,
+        interestTwo,
+        interestThree,
+        interestFour,
+        interestFive
+    ]) 
+    data = ref_users.get()
+    data[userId]["embedding"] = ems
+    ref_users.set(data)
 
 """
 netsh interface portproxy add v4tov4 listenport=8765 listenaddress=0.0.0.0 connectport=8765 connectaddress=172.19.62.87

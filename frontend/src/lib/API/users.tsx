@@ -1,6 +1,7 @@
 import { getDatabase, ref, push, child, get, update, Database, DataSnapshot, set } from 'firebase/database';
 import { generateId } from '../helper';
 import { type Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { GET } from "$lib/backend"
 import { FirebaseError } from 'firebase/app';
 
 export async function signUpUser (
@@ -14,12 +15,22 @@ export async function signUpUser (
 ) {
     let data = await createUserWithEmailAndPassword(auth, email, password) 
     
-    set(ref(db, "users/" + data.user.uid), {
+    await set(ref(db, "users/" + data.user.uid), {
         userId: data.user.uid,
         name: name,
         email: email,
         phone: phone,
         interests: interests
+    })
+
+    // set server to set the user embeddings -- async
+    GET("setUserVector", {
+        "userId": data.user.uid,
+        "interestOne": interests[0],
+        "interestTwo": interests[1],
+        "interestThree": interests[2],
+        "interestFour": interests[3],
+        "interestFive": interests[4],
     })
 }
 
@@ -30,6 +41,7 @@ export async function signInUser (
 ) {
     try {
         let result = await signInWithEmailAndPassword(auth, email, password);
+
         return result.user.uid;
     } catch (e) {
         if (e instanceof FirebaseError) {

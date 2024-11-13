@@ -12,13 +12,12 @@
     $effect(() => { // load meta data
         async function start () {
             let data = await getUserMetadata(db, $page.params.slug)
-            
             name = data.name
         }
-        start()
 
         if (auth.currentUser == null) goto("/login")
         else {
+            start()
             onMessagingUpdate(db, auth.currentUser!.uid, $page.params.slug, (data:any) => {
                 msgs = data
                 console.log(data)
@@ -26,12 +25,9 @@
         }
     })
 
-
     function sendMsg () {
         sendMessage(db, auth.currentUser!.uid, $page.params.slug, msgToSend)
     }
-    
-
 </script>
 
 <h1 class="w-full text-center py-4 font-bold text-[22px]">Talking to {name}</h1>

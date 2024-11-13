@@ -20,12 +20,12 @@
 
             console.log(data)
         }
-        start()
+        if (auth.currentUser == null) goto("/")
+        else {
+            start()
+        }
     })
 
-    $effect(() => {
-        if (auth.currentUser == null) goto("/")
-    })
 </script>
 
 <div class="p-4">

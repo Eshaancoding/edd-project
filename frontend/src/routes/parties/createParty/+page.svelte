@@ -3,15 +3,14 @@
     import { createParty, onPartiesList } from "$lib/API/parties"    
     import {db, auth} from "$lib/firebase"
 
-    $: onPartiesList(db, (data:any) => {
-        console.log(data)
+    let name_party = $state("")
+    let desc_party = $state("")
+    let location = $state("")
+
+
+    $effect(() => {
+        if (auth.currentUser == null) goto("/")
     })
-
-    // $: if (auth.currentUser == null) goto("/login") // if no current user, go back to login
-
-    let name_party = ""
-    let desc_party = ""
-    let location = ""
 
     function cParty () {
         createParty(db, name_party, desc_party, location, auth.currentUser!.uid)
