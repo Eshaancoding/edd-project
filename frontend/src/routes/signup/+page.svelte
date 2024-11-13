@@ -14,8 +14,6 @@
     let interestFour = ""
     let interestFive = ""
     
-    $: console.log(name)
-
     async function signUpClick () {
         await signUpUser(db, auth, name, email, phone, password, [
             interestOne,
