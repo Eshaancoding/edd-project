@@ -1,6 +1,7 @@
 import { getDatabase, ref, push, child, get, update, Database, DataSnapshot, set } from 'firebase/database';
 import { generateId } from '../helper';
 import { type Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 
 export async function signUpUser (
     db:Database, 
@@ -27,8 +28,18 @@ export async function signInUser (
     email: string,
     password: string
 ) {
-    let result = await signInWithEmailAndPassword(auth, email, password)
-    return result.user.uid
+    try {
+        let result = await signInWithEmailAndPassword(auth, email, password);
+        return result.user.uid;
+    } catch (e) {
+        if (e instanceof FirebaseError) {
+            return e.code
+        } else {
+            console.error('An unknown error occurred:', e);
+        }
+        return null;  // Or handle error as needed
+    }
+
 }
 
 export async function getUserMetadata (db: Database, userId: string) {

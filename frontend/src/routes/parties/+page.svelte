@@ -6,10 +6,20 @@
     import type { Database } from "firebase/database";
 
     let d = [] as any[]
+    let partiesJoined = [] as string[]
     
     $: onPartiesList(db, (data:any) => {
-        console.log(data)
         d = data
+        partiesJoined = []
+        Object.keys(data).forEach((partyId:string) => {
+            data[partyId].participants.forEach((element:any) => {
+                if (element.profileId == auth.currentUser!.uid) {
+                    partiesJoined.push(partyId) 
+                }
+            });
+        }); 
+
+        console.log(partiesJoined)
     })
 
     // some error with svelte, wanna check later
@@ -17,6 +27,8 @@
 
     async function joinP (partyId:string) {
         let metadata = await getUserMetadata(db, auth.currentUser!.uid)
+        
+        
 
         await joinParty(
             db,
@@ -57,12 +69,23 @@
                 {/each}
             </div>
 
-            <button 
-                on:click={() => joinP(value.partyId)}
-                class="relative relative ml-4 w-[100px] text-center px-4 py-2 bg-blue-500 rounded-[15px] text-white"
-            >
-                Join Party
-            </button>
+            <div class="my-2">
+                {#if partiesJoined.includes(value.partyId) } 
+                    <a 
+                        href="/"
+                        class="relative relative w-[100px] text-center px-4 py-2 bg-blue-500 rounded-[15px] text-white"
+                    >
+                        Go to Party
+                    </a>
+                {:else}
+                    <button 
+                        on:click={() => joinP(value.partyId)}
+                        class="relative relative w-[100px] text-center px-4 py-2 bg-blue-500 rounded-[15px] text-white"
+                    >
+                        Join Party
+                    </button>
+                {/if}
+            </div>
         </div> 
     {/each}
 </div>

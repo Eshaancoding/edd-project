@@ -22,8 +22,9 @@ export function onMessagingUpdate (
   
   let ref_msg = ref(db, "messaging/" + encodePathForMsg(currentId, endUserId))
   onValue(ref_msg, (snapshot) => {
-    let data = snapshot.val();
+    let data = snapshot.val() || {a: []};
     // order by "date"        
+    data = Object.values(data)
     data.sort((a:any, b:any) => a.date - b.date)
 
     callback(data);
@@ -34,8 +35,7 @@ export function sendMessage (
     db: Database,
     currentId: string,
     endUserId: string, 
-    msg: string,
-    callback: (data:any) => void
+    msg: string
 ) {
   let ref_msg = ref(db, "messaging/" + encodePathForMsg(currentId, endUserId))
   push(ref_msg, {

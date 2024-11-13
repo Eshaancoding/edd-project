@@ -1,6 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-import { page } from "$app/stores";
+    import { page } from "$app/stores";
     import { getUserMetadata } from "$lib/API/users.js";
     import { auth, db } from "$lib/firebase.js";
 
@@ -48,7 +48,7 @@ import { page } from "$app/stores";
             class="relative relative ml-4 w-[150px] text-center px-4 py-2 bg-blue-500 rounded-[15px] text-white"
         >
             Chat
-        </button>
+        </a>
     {:else}
         <button 
             onclick={() => {}}
