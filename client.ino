@@ -15,6 +15,8 @@ const char* device_id = "be231c";
 String ssid = "eshaan";
 String password = "765ESHAAN";
 
+String first = "";
+String second = "";
 
 TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup.h
 
@@ -91,24 +93,24 @@ void loop() {
   // get status from server
   std::string server_url ="http://172.20.10.3:8765/status?device_id=" + std::string(device_id);
   std::string server_out = getPayload(server_url.c_str());
+  server_out = server_out.substr(1, server_out.length() - 2);
 
   // draw
   tft.fillScreen(TFT_BLACK);
   tft.setTextColor(TFT_WHITE, TFT_WHITE); 
 
-  if (server_out.size() > 2) { // we have a valid id
-
+  if (server_out.size() > 0) { // we have a valid id
     std::string delim = ",";
     std::vector<std::string> sp = split(server_out, delim);
     tft.drawCentreString(sp[0].c_str(), 170, 60, 4);
     tft.drawCentreString(sp[1].c_str(), 170, 100, 4);
     
-    delay(1000); // ping server every 3 seconds to update
+    delay(3000); // ping server every 3 seconds to update
   } else { // else, just draw the device id
 
     tft.drawCentreString("Device ID:", 170, 60, 4);
     tft.drawCentreString(device_id, 170, 100, 4);
-    delay(1000); // ping server every 1 seconds to update whether connected or not
+    delay(3000); // ping server every 1 seconds to update whether connected or not
   }
 }
 
