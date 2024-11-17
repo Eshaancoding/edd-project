@@ -44,11 +44,13 @@
         <TextFieldOutlined
             bind:value={email}
             name="Email"
+            required
         />
         <TextFieldOutlined
             bind:value={password}
             name="Password"
             extraOptions={{type: "password"}}
+            required
         />
     
         {#if error.length > 0}
@@ -56,8 +58,8 @@
         {/if}
 
         <Button
-            on:click={loginClick}
             type="filled"
+            extraOptions={{type: "submit"}}
         >
             Log in
         </Button>
