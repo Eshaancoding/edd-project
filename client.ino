@@ -1,20 +1,43 @@
-#include "HTTPClient.h"
-#include "WiFi.h"
-#include "WiFiClient.h"
-#include "pin_config.h"
+// WiFi + Firebase
+#include <Arduino.h>
+#include <WiFi.h>
+#include <FirebaseClient.h>
+#include <WiFiClientSecure.h>
+#include <FirebaseJson.h>
+
+// includes for TFT + others
 #include <SPI.h>
 #include <TFT_eSPI.h> // Graphics and font library for ST7735 driver chip
+#include "HTTPClient.h"
+#include "WiFiClient.h"
+#include "pin_config.h"
 
-
+// PINS to be defined for TFT
 #define PIN_PCM5102A_DIN 43
 #define PIN_PCM5102A_BCLK 44
 #define PIN_PCM5102A_LRCLK 18
 
+// Firebase initialize client
+#define DATABASE_SECRET "AIzaSyCt4_VJ1h6DndF1143QZnUqngXGxTJzSPU"
+#define DATABASE_URL "https://edd-project-f9d25-default-rtdb.firebaseio.com"
+
+WiFiClientSecure ssl;
+DefaultNetwork network;
+AsyncClientClass client(ssl, getNetwork(network));
+
+FirebaseApp app;
+RealtimeDatabase Database;
+AsyncResult result;
+LegacyToken dbSecret(DATABASE_SECRET);
+
+// Other variables for disable
 const char* device_id = "be231c";
 
 String ssid = "eshaan";
 String password = "765ESHAAN";
 
+String first = "";
+String second = "";
 
 TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup.h
 
@@ -45,70 +68,51 @@ void setup(void) {
     tries += 1;
   }
 
+  // initialize firebase!
+  ssl.setInsecure();
+  initializeApp(client, app, getAuth(dbSecret));
+  app.getApp<RealtimeDatabase>(Database);
+  Database.url(DATABASE_URL);
+  client.setAsyncResult(result);
 
+  // send result
   tft.fillScreen(TFT_BLACK);
-  tft.println("Wifi Successfully Connected.");
+  tft.println("Firebase + WiFi Successfully Connected.");
 }
 
-std::string getPayload(const char *url) {
-  HTTPClient http;
-  std::string payload = "";
-
-  if (WiFi.status() == WL_CONNECTED) {
-    http.begin(url);           // Initialize the HTTP request
-    int httpCode = http.GET(); // Send the GET request
-
-    if (httpCode > 0) {           // Check for successful response
-      payload = http.getString().c_str(); // Get the payload as a string
-    } else {
-      Serial.print("Error on HTTP request: ");
-      Serial.println(httpCode);
-    }
-
-    http.end(); // Close the connection
-  } else {
-    Serial.println("Wi-Fi disconnected");
-  }
-
-  return payload; // Return the response payload
-}
-
-std::vector<std::string> split(std::string& s, std::string& delimiter) {
-    std::vector<std::string> tokens;
-    size_t pos = 0;
-    std::string token;
-    while ((pos = s.find(delimiter)) != std::string::npos) {
-        token = s.substr(0, pos);
-        tokens.push_back(token);
-        s.erase(0, pos + delimiter.length());
-    }
-    tokens.push_back(s);
-
-    return tokens;
+std::string retStrJSON (FirebaseJson json, std::string param) {
+  FirebaseJsonData result;
+  json.get(result, param.c_str());
+  return std::string(result.to<String>().c_str());
 }
 
 void loop() {
   // get status from server
-  std::string server_url ="http://172.20.10.3:8765/status?device_id=" + std::string(device_id);
-  std::string server_out = getPayload(server_url.c_str());
+  std::string user_id = "/devices/";
+  user_id += device_id;
+  String string_res = Database.get<String>(client, user_id.c_str()); // use .c_str()
+  FirebaseJson json_result;
+  json_result.setJsonData(string_res.c_str());
+
+  std::string display = retStrJSON(json_result, "display");
+  std::string name = retStrJSON(json_result, "name");
+  std::string partyId = retStrJSON(json_result, "partyId");
+  std::string userId = retStrJSON(json_result, "userId");
 
   // draw
   tft.fillScreen(TFT_BLACK);
   tft.setTextColor(TFT_WHITE, TFT_WHITE); 
 
-  if (server_out.size() > 2) { // we have a valid id
-
-    std::string delim = ",";
-    std::vector<std::string> sp = split(server_out, delim);
-    tft.drawCentreString(sp[0].c_str(), 170, 60, 4);
-    tft.drawCentreString(sp[1].c_str(), 170, 100, 4);
+  if (partyId != "None" && userId != "None") { // we have a valid id
+    tft.drawCentreString(name.c_str(), 170, 60, 4);
+    tft.drawCentreString(display.c_str(), 170, 100, 4);
     
-    delay(1000); // ping server every 3 seconds to update
+    delay(3000); // ping server every 3 seconds to update
   } else { // else, just draw the device id
 
     tft.drawCentreString("Device ID:", 170, 60, 4);
     tft.drawCentreString(device_id, 170, 100, 4);
-    delay(1000); // ping server every 1 seconds to update whether connected or not
+    delay(3000); // ping server every 1 seconds to update whether connected or not
   }
 }
 
