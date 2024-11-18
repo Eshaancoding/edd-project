@@ -2,8 +2,8 @@
     import { goto } from "$app/navigation";
     import { joinParty, onPartiesList } from "$lib/API/parties"    
     import { getUserMetadata } from "$lib/API/users";
-    import {db, auth} from "$lib/firebase"
-    import type { Database } from "firebase/database";
+    import { db, auth } from "$lib/firebase"
+    import { grouping_algo } from "$lib/groupingAlgorithm"
 
     let d = [] as any[]
     let partiesJoined = [] as string[]
@@ -12,6 +12,7 @@
     $: {
         if (auth.currentUser == null) goto("/")
         else {
+            console.log(auth.currentUser)
             onPartiesList(db, (data:any) => {
                 d = data
                 partiesJoined = []
@@ -30,12 +31,18 @@
     async function joinP (partyId:string) {
         let metadata = await getUserMetadata(db, auth.currentUser!.uid)
         
-        joinParty(
+        console.log("Joining party...")        
+
+        await joinParty(
             db,
             metadata.name,
             auth.currentUser!.uid,
             partyId
         )
+
+        console.log("Joined party")
+
+        grouping_algo(db, partyId)
     }
 </script>
 

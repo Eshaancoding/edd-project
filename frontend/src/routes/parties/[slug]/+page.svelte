@@ -2,7 +2,6 @@
     import { page } from "$app/stores";
     import { auth, db } from "$lib/firebase";
     import { getParty } from "$lib/API/parties"    
-    import { goto } from "$app/navigation";
     import { getUserMetadata } from "$lib/API/users";
     import { cosineSimilarity } from "$lib/helper"
     import { 
@@ -11,6 +10,7 @@
         unregisterDevice,
         updateDisplayName
     } from "$lib/API/devices"
+    import { goto } from "$app/navigation";
 
     let partyId = $page.params.slug
     let partyInfo = $state({} as any)
@@ -136,7 +136,7 @@
         {#each sortedPartipants as partipant}
             <div class="p-4 rounded-[15px] bg-slate-100 m-4">
                 <p class="font-bold py-2">{partipant.name} ({Math.round(partipant.similarity*100)}% similarity)</p>
-                <div class="flex flex-row gap-4">
+                <div class="flex flex-row gap-4 w-[400px]">
                     <div>
                         <p>Interests:</p>
                         {#each userMetaData[partipant.profileId].interests as interest}

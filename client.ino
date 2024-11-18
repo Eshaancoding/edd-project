@@ -48,7 +48,7 @@ void setup(void) {
   digitalWrite(PIN_POWER_ON, HIGH);
 
   tft.init();
-  tft.setRotation(1);
+  tft.setRotation(3);
   tft.fillScreen(TFT_BLACK);
 
   WiFi.disconnect();
