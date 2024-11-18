@@ -104,9 +104,27 @@ void loop() {
   tft.setTextColor(TFT_WHITE, TFT_WHITE); 
 
   if (partyId != "None" && userId != "None") { // we have a valid id
-    tft.drawCentreString(name.c_str(), 170, 60, 4);
-    tft.drawCentreString(display.c_str(), 170, 100, 4);
+    tft.drawCentreString(name.c_str(), 170, 50, 4);
+
+    int CenterX = 170;
+    int CenterY = 120;
     
+    int groupNumber = std::stoi(display);
+    switch (groupNumber) {
+      case 0: 
+        tft.fillRect(CenterX - 25, CenterY - 25, 50, 50, TFT_RED);
+        break;
+      case 1: 
+        tft.fillTriangle(CenterX, CenterY - 30, CenterX - 30, CenterY + 30, CenterX + 30, CenterY + 30, TFT_BLUE);
+        break;
+      case 2: 
+        tft.fillRect(CenterX - 40, CenterY - 20, 80, 40, TFT_GREEN);
+        break;
+      default: 
+        // tft.fillCircle(CenterX, CenterY, 30, shapeColor);
+        break;
+    }
+
     delay(3000); // ping server every 3 seconds to update
   } else { // else, just draw the device id
 

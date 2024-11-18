@@ -19,12 +19,12 @@
     let connectedDevice = $state("")
     let sortedPartipants = $state([] as any[])
     let groups = $state([] as any[])
+    let currentGroup = $state("")
     
     $effect(() => {
         async function getInfo () { 
             // get party information and user meta data
             let pi = await getParty(db, partyId) 
-            console.log(pi)
             let metadata = {} as any
             let idToName = {} as {[id:string]: string}
             for (let i = 0; i < pi.participants.length; i++) {
@@ -57,14 +57,17 @@
                 if (!(clusterId in groupDataResult)) {
                     groupDataResult[clusterId] = []
                 }
+
+                if (id == auth.currentUser!.uid) {
+                    currentGroup = clusterId
+                }
+                
                 groupDataResult[clusterId].push({
                     "name": name,
                     "id": id
                 })
             });
             groups = Object.values(groupDataResult)
-
-            console.log(groupDataResult)
         }
         
         if (auth.currentUser == null) goto("/")
@@ -139,7 +142,7 @@
                                 onclick={() => registerDevice(
                                     db, 
                                     userMetaData[auth.currentUser!.uid]["name"],
-                                    sortedPartipants[0].name,
+                                    currentGroup,
                                     auth.currentUser!.uid, 
                                     partyId, 
                                     device
