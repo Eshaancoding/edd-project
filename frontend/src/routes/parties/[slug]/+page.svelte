@@ -18,6 +18,7 @@
     let availableDevices = $state([] as any[])
     let connectedDevice = $state("")
     let sortedPartipants = $state([] as any[])
+    let groups = $state([])
     
     $effect(() => {
         async function getInfo () { 
@@ -25,9 +26,11 @@
             let pi = await getParty(db, partyId) 
             console.log(pi)
             let metadata = {} as any
+            let idToName = {} as {[id:string]: string}
             for (let i = 0; i < pi.participants.length; i++) {
                 let data = await getUserMetadata(db, pi.participants[i].profileId)
                 metadata[pi.participants[i].profileId] = data
+                idToName[pi.participants[i].profileId] = data.name
             }
             sortedPartipants = sortPartipants(pi.participants, metadata)
 
@@ -44,6 +47,24 @@
 
             userMetaData = metadata
             partyInfo = pi
+
+            // organize groups 
+            let groupDataResult:{[id:number]:any[]} = {}
+            Object.keys(pi.clusterResult).forEach((userId:string) => {
+                let name = idToName[userId]
+                let id = userId
+                let clusterId = pi.clusterResult[userId]   
+                if (!(clusterId in groupDataResult)) {
+                    groupDataResult[clusterId] = []
+                }
+                groupDataResult[clusterId].push({
+                    "name": name,
+                    "id": id
+                })
+            });
+            groups = Object.values(groupDataResult)
+
+            console.log(groupDataResult)
         }
         
         if (auth.currentUser == null) goto("/")
@@ -131,6 +152,24 @@
             {/if}
         </div>
         <br />
+        
+
+        <p>Groups:</p>
+        <div class="flex gap-2 p-4">
+            {#each groups as group, i}
+                <div class="w-[300px] h-[200px] bg-slate-400 rounded-[15px]">
+                    <p class="font-bold py-2">Group #{i+1}</p>
+                    {#each group as person}
+                        {#if person.id == auth.currentUser!.uid }
+                            <p class="font-bold">You ({person.name})</p>
+                        {:else}
+                            <p>{person.name}</p>
+                        {/if}
+                    {/each}
+                </div>
+            {/each}
+
+        </div>
 
         <p>You should meet (most similar): </p>
         {#each sortedPartipants as partipant}
