@@ -18,7 +18,7 @@
     let availableDevices = $state([] as any[])
     let connectedDevice = $state("")
     let sortedPartipants = $state([] as any[])
-    let groups = $state([])
+    let groups = $state([] as any[])
     
     $effect(() => {
         async function getInfo () { 

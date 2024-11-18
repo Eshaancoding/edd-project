@@ -7,12 +7,13 @@
 
     let d = [] as any[]
     let partiesJoined = [] as string[]
-    
+    let name = "" 
     
     $: {
         if (auth.currentUser == null) goto("/")
         else {
-            console.log(auth.currentUser)
+            getUserMetadata(db, auth.currentUser!.uid).then((value:any) => name = value.name)
+
             onPartiesList(db, (data:any) => {
                 d = data
                 partiesJoined = []
@@ -46,7 +47,11 @@
     }
 </script>
 
-<h1 class="w-full text-center py-4 font-bold text-[22px]">Parties</h1>
+<h1 class="w-full text-center py-4 text-[22px]">
+    <span class="font-bold">Hello {name}!</span> 
+    <br /> 
+    Join a party
+</h1>
 
 <div class="my-8">
     <a 
