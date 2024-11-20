@@ -178,11 +178,6 @@
         </div>
         <br />
 
-        <button onclick={async () => {
-            console.log(await callLLM(["Computer", "Science", "Life", "Learning"]))
-        }}>Test</button>
-        
-
         {#if groups.length > 0}
             <p>Groups:</p>
             <div class="flex gap-2 p-4">
