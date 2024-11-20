@@ -25,6 +25,31 @@
     let llmGeneratingStatusPTP = $state({} as {[id:number]: string})
     let currentGroup = $state("")
     
+    function randomInterest (arr: string[]) {
+        return arr[Math.floor(Math.random() * arr.length)]    
+    }
+
+    function randomInterestGroup (arr: string[]) {
+        // find unique array
+        let uniqueArr = [] as string[]
+        arr.forEach((value:string) => {
+            if (!uniqueArr.includes(value))
+                uniqueArr.push(value)
+        })
+
+        let idxOne = 0
+        let idxTwo = 0
+        while (idxOne == idxTwo) {
+            idxOne = Math.floor(Math.random() * arr.length)
+            idxTwo = Math.floor(Math.random() * arr.length)
+        }
+
+        return [
+            uniqueArr[idxOne],
+            uniqueArr[idxTwo]
+        ]
+    }
+    
     $effect(() => {
         async function getInfo () { 
             // get party information and user meta data
@@ -198,7 +223,7 @@
                         {#if llmGeneratingStatus[i] == "available"}
                             <button onclick={async () => {
                                 llmGeneratingStatus[i] = "generating"
-                                llmGeneratingStatus[i] = await callLLM(groupsInterests[i])
+                                llmGeneratingStatus[i] = await callLLM(randomInterestGroup(groupsInterests[i]))
                             }}>
                                 Generate sentence starter!
                             </button>
@@ -209,7 +234,7 @@
                             <br />
                             <button onclick={async () => {
                                 llmGeneratingStatus[i] = "generating"
-                                llmGeneratingStatus[i] = await callLLM(groupsInterests[i])
+                                llmGeneratingStatus[i] = await callLLM(randomInterestGroup(groupsInterests[i]))
                             }}>
                                 Generate Another!
                             </button>
@@ -246,8 +271,8 @@
                             <button onclick={async () => {
                                 llmGeneratingStatusPTP[partipant.profileId] = "generating"
                                 llmGeneratingStatusPTP[partipant.profileId] = await callLLM([
-                                    ...userMetaData[auth.currentUser!.uid]["interests"],
-                                    ...userMetaData[partipant.profileId]["interests"],
+                                    randomInterest(userMetaData[auth.currentUser!.uid]["interests"]),
+                                    randomInterest(userMetaData[partipant.profileId]["interests"]),
                                 ])
                             }}>
                                 Generate sentence starter!
@@ -260,8 +285,8 @@
                             <button onclick={async () => {
                                 llmGeneratingStatusPTP[partipant.profileId] = "generating"
                                 llmGeneratingStatusPTP[partipant.profileId] = await callLLM([
-                                    ...userMetaData[auth.currentUser!.uid]["interests"],
-                                    ...userMetaData[partipant.profileId]["interests"],
+                                    randomInterest(userMetaData[auth.currentUser!.uid]["interests"]),
+                                    randomInterest(userMetaData[partipant.profileId]["interests"]),
                                 ])
                             }}>
                                 Generate Another!
