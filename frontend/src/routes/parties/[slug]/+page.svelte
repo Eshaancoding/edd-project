@@ -65,7 +65,6 @@
 
             // update available devices
             onAvailableDevices(db, auth.currentUser!.uid, partyId, (data: any, isConnected:boolean) => {
-                console.log(isConnected)
                 if (isConnected) {
                     connectedDevice = data
                 }
@@ -110,7 +109,6 @@
                 groups = Object.entries(groupDataResult).sort((a, b) => parseInt(a[0]) - parseInt(b[0])).map((value) => value[1])
             }
 
-            console.log(groupsInterests)
         }
         
         if (auth.currentUser == null) goto("/")
@@ -157,8 +155,6 @@
         return sortedData
 
     }
-
-    $effect(() => console.log(connectedDevice))
 
 </script>
 

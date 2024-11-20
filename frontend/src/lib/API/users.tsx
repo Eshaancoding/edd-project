@@ -19,7 +19,6 @@ export async function signUpUser (
     
     callbackStatus("Calculating embeddings...") 
     let ems = await getEmbeddings(interests)
-    console.log(ems)
     
     callbackStatus("Setting database...") 
     await set(ref(db, "users/" + data.user.uid), {

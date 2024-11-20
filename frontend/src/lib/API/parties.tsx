@@ -53,7 +53,6 @@ export async function joinParty(
         await update(ref_party, { participants });
       }
     } else {
-      console.log("Party not found.");
     }
   } catch (error) {
     console.error("Error joining party:", error);
@@ -84,7 +83,6 @@ export async function getParty (db: Database, partyId: string) {
       const partyData = snapshot.val();
       return partyData || [];
     } else {
-      console.log("Party not found.");
       return [];
     }
   } catch (error) {

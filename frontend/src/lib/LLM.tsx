@@ -32,8 +32,6 @@ import axios from "axios"
 export async function callLLM(interests: string[]) {
     const MODEL_ENDPOINT = 'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3/v1/chat/completions'; // Adjust if hosted differently
 
-    console.log(`called llm with interests: ${interests.join(", ")}`)
-
     const response = await axios.post(
         MODEL_ENDPOINT,
         {
@@ -58,8 +56,6 @@ export async function callLLM(interests: string[]) {
         }
     )
     
-    console.log("llm responded")
-
     const result = response.data
 
     let ret_str = result["choices"][0]["message"]["content"] as string

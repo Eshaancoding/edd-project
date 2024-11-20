@@ -47,21 +47,16 @@ export async function grouping_algo (db: Database, partyId:string) {
   // idtwo --> 1
   // idthree --> 1
 
-  console.log(clusterCount)
   Object.entries(clusterCount)
     .filter((value: [string, number]) => { 
       return value[1] == 1 
     })
     .forEach((value: [string, number]) => {
       const clusterId = parseInt(value[0])
-      console.log("cluster id: ", clusterId)      
-      console.log("cluster result: ", clusterResult)      
 
       let partID = Object.entries(clusterResult).filter((value) => value[1] == clusterId)[0][0]
       let partipantIdx = participantsIDs.indexOf(partID)
       let partipantDataEmbds = dataEmbeds[partipantIdx]
-
-      console.log(clusterId, partID, partipantIdx)
     
       let highest_similarity = 0      
       let closestIdx = -1
@@ -79,7 +74,6 @@ export async function grouping_algo (db: Database, partyId:string) {
       }
 
       let joinedCluster = clusterResult[participantsIDs[closestIdx]]
-      console.log(highest_similarity, closestIdx, joinedCluster)
 
       if (participantsIDs.length == 3) {
         clusterResult[partID] = joinedCluster  // put it all in one

@@ -10,7 +10,6 @@
     let name = "" 
     
     $: {
-        console.log(auth.currentUser)
         if (auth.currentUser == null) goto("/")
         else {
             getUserMetadata(db, auth.currentUser!.uid).then((value:any) => name = value.name)
@@ -33,16 +32,12 @@
     async function joinP (partyId:string) {
         let metadata = await getUserMetadata(db, auth.currentUser!.uid)
         
-        console.log("Joining party...")        
-
         await joinParty(
             db,
             metadata.name,
             auth.currentUser!.uid,
             partyId
         )
-
-        console.log("Joined party")
 
         grouping_algo(db, partyId)
     }
