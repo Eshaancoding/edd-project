@@ -37,19 +37,12 @@ export async function signInUser (
     email: string,
     password: string
 ) {
-    try {
-        let result = await signInWithEmailAndPassword(auth, email, password);
 
-        return result.user.uid;
-    } catch (e) {
-        if (e instanceof FirebaseError) {
-            return e.code
-        } else {
-            console.error('An unknown error occurred:', e);
-        }
-        return null;  // Or handle error as needed
-    }
-
+    let errorCode = "" 
+    let result = await signInWithEmailAndPassword(auth, email, password).catch((reason:any) => {
+        errorCode = reason.code
+    });
+    return errorCode.length > 0 ? errorCode : result
 }
 
 export async function getUserMetadata (db: Database, userId: string) {

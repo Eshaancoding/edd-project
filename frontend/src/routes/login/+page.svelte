@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import {Button, TextFieldOutlined} from 'm3-svelte';
     import {signInUser } from "$lib/API/users"    
     import { auth } from "$lib/firebase"
@@ -29,6 +29,12 @@
                 break;
             case 'auth/network-request-failed':
                 error = "Network request failed!"
+                break;
+            case 'auth/invalid-credential':
+                error = "Wrong password!"
+                break;
+            case 'unknown':
+                error = "An unknown error occured"
                 break;
             default:
                 goto("/parties")

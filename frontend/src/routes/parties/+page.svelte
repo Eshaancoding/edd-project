@@ -1,6 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { joinParty, onPartiesList } from "$lib/API/parties"    
+    import { joinParty, onPartiesList, leaveParty } from "$lib/API/parties"    
     import { getUserMetadata } from "$lib/API/users";
     import { db, auth } from "$lib/firebase"
     import { grouping_algo } from "$lib/groupingAlgorithm"
@@ -10,6 +10,7 @@
     let name = "" 
     
     $: {
+        console.log(auth.currentUser)
         if (auth.currentUser == null) goto("/")
         else {
             getUserMetadata(db, auth.currentUser!.uid).then((value:any) => name = value.name)
@@ -43,6 +44,11 @@
 
         console.log("Joined party")
 
+        grouping_algo(db, partyId)
+    }
+
+    async function leaveP (partyId:string) {
+        await leaveParty(db, partyId, auth.currentUser!.uid); 
         grouping_algo(db, partyId)
     }
 </script>
@@ -98,6 +104,12 @@
                     >
                         Go to Party
                     </a>
+                    <button 
+                        on:click={() => leaveP(value.partyId)}
+                        class="relative relative w-[150px] text-center px-4 py-2 bg-blue-500 rounded-[15px] text-white"
+                    >
+                        Leave Party
+                    </button>
                 {:else}
                     <button 
                         on:click={() => joinP(value.partyId)}

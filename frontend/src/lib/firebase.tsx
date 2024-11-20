@@ -3,7 +3,7 @@ import { getDatabase } from 'firebase/database';
 import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCt4_VJ1h6DndF1143QZnUqngXGxTJzSPU",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "edd-project-f9d25.firebaseapp.com",
   databaseURL: "https://edd-project-f9d25-default-rtdb.firebaseio.com",
   projectId: "edd-project-f9d25",
