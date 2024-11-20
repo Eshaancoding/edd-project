@@ -1,8 +1,7 @@
-<script>
-    import { goto } from "$app/navigation";
+<script lang="ts">
     import {signInUser } from "$lib/API/users"    
-    import {db, auth} from "$lib/firebase"
-    import { redirect } from "@sveltejs/kit";
+    import { auth } from "$lib/firebase"
+    import { goto } from '$app/navigation';
 
     let email = ""
     let password = ""
@@ -30,8 +29,14 @@
             case 'auth/network-request-failed':
                 error = "Network request failed!"
                 break;
+            case 'auth/invalid-credential':
+                error = "Wrong password!"
+                break;
+            case 'unknown':
+                error = "An unknown error occured"
+                break;
             default:
-                goto("/parties") // it's a success
+                goto("/parties")
         }
     }
 </script>

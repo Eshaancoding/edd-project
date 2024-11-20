@@ -38,9 +38,6 @@ export async function unregisterDevice (
 ) {
     let data:any = (await get(ref(db, "devices"))).val() 
 
-    console.log("data")
-    console.log(data)
-
     data[deviceId] = {
         "partyId": "None",
         "userId": "None",
@@ -60,9 +57,6 @@ export async function registerDevice (
 )
 {
     let data:any = (await get(ref(db, "devices"))).val() 
-
-    console.log("data")
-    console.log(data)
 
     data[deviceId] = {
         "partyId": partyId,

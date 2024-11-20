@@ -53,11 +53,26 @@ export async function joinParty(
         await update(ref_party, { participants });
       }
     } else {
-      console.log("Party not found.");
     }
   } catch (error) {
     console.error("Error joining party:", error);
   }
+}
+
+export async function leaveParty (db: Database, partyId: string, profileId:string) {
+  const ref_party = child(ref(db, "parties"), partyId)
+  let snapshot = (await get(ref_party)).val()
+  
+  let parts = snapshot.participants as any[]
+  let idx = parts.findIndex((value:any) => value.profileId == profileId) 
+  parts.splice(idx, 1)
+  snapshot.participants = parts
+
+  let clusterResult = snapshot.clusterResult as any
+  delete clusterResult[profileId]
+  snapshot.clusterResult = clusterResult
+  
+  await set(ref_party, snapshot)
 }
 
 export async function getParty (db: Database, partyId: string) {
@@ -68,7 +83,6 @@ export async function getParty (db: Database, partyId: string) {
       const partyData = snapshot.val();
       return partyData || [];
     } else {
-      console.log("Party not found.");
       return [];
     }
   } catch (error) {
@@ -76,3 +90,4 @@ export async function getParty (db: Database, partyId: string) {
     return [];
   }
 }
+

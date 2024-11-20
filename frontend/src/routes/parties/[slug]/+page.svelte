@@ -2,7 +2,6 @@
     import { page } from "$app/stores";
     import { auth, db } from "$lib/firebase";
     import { getParty } from "$lib/API/parties"    
-    import { goto } from "$app/navigation";
     import { getUserMetadata } from "$lib/API/users";
     import { cosineSimilarity } from "$lib/helper"
     import { 
@@ -11,6 +10,8 @@
         unregisterDevice,
         updateDisplayName
     } from "$lib/API/devices"
+    import { goto } from "$app/navigation";
+    import { callLLM } from "$lib/LLM"
 
     let partyId = $page.params.slug
     let partyInfo = $state({} as any)
@@ -18,22 +19,52 @@
     let availableDevices = $state([] as any[])
     let connectedDevice = $state("")
     let sortedPartipants = $state([] as any[])
+    let groups = $state([] as any[])
+    let groupsInterests = $state({} as {[id:number]: string[]})
+    let llmGeneratingStatus = $state({} as {[id:number]: string})
+    let llmGeneratingStatusPTP = $state({} as {[id:number]: string})
+    let currentGroup = $state("")
+    
+    function randomInterest (arr: string[]) {
+        return arr[Math.floor(Math.random() * arr.length)]    
+    }
+
+    function randomInterestGroup (arr: string[]) {
+        // find unique array
+        let uniqueArr = [] as string[]
+        arr.forEach((value:string) => {
+            if (!uniqueArr.includes(value))
+                uniqueArr.push(value)
+        })
+
+        let idxOne = 0
+        let idxTwo = 0
+        while (idxOne == idxTwo) {
+            idxOne = Math.floor(Math.random() * arr.length)
+            idxTwo = Math.floor(Math.random() * arr.length)
+        }
+
+        return [
+            uniqueArr[idxOne],
+            uniqueArr[idxTwo]
+        ]
+    }
     
     $effect(() => {
         async function getInfo () { 
             // get party information and user meta data
             let pi = await getParty(db, partyId) 
-            console.log(pi)
             let metadata = {} as any
+            let idToName = {} as {[id:string]: string}
             for (let i = 0; i < pi.participants.length; i++) {
                 let data = await getUserMetadata(db, pi.participants[i].profileId)
                 metadata[pi.participants[i].profileId] = data
+                idToName[pi.participants[i].profileId] = data.name
             }
             sortedPartipants = sortPartipants(pi.participants, metadata)
 
             // update available devices
             onAvailableDevices(db, auth.currentUser!.uid, partyId, (data: any, isConnected:boolean) => {
-                console.log(isConnected)
                 if (isConnected) {
                     connectedDevice = data
                 }
@@ -44,6 +75,40 @@
 
             userMetaData = metadata
             partyInfo = pi
+
+            // organize groups 
+            if (Object.hasOwn(pi, "clusterResult")) {
+                let groupDataResult:{[id:number]:any[]} = {}
+                Object.keys(pi.clusterResult).forEach((userId:string) => {
+                    let name = idToName[userId]
+                    let id = userId
+                    let clusterId = pi.clusterResult[userId]   
+                    if (!(clusterId in groupDataResult)) {
+                        groupDataResult[clusterId] = []
+                    }
+
+                    if (id == auth.currentUser!.uid) {
+                        currentGroup = clusterId
+                    }
+                    
+                    groupDataResult[clusterId].push({
+                        "name": name,
+                        "id": id
+                    })
+
+                    if (!(clusterId in groupsInterests)) {
+                        groupsInterests[clusterId] = []
+                    }
+                    
+                    if (!(clusterId in llmGeneratingStatus)) {
+                        llmGeneratingStatus[clusterId] = "available"
+                    }
+
+                    groupsInterests[clusterId] = groupsInterests[clusterId].concat(metadata[userId].interests)
+                });
+                groups = Object.entries(groupDataResult).sort((a, b) => parseInt(a[0]) - parseInt(b[0])).map((value) => value[1])
+            }
+
         }
         
         if (auth.currentUser == null) goto("/")
@@ -69,6 +134,10 @@
                         metadata[auth.currentUser!.uid]["embedding"][0],
                     )
                 }) 
+
+                if (!(partipant.profileId in llmGeneratingStatusPTP)) {
+                    llmGeneratingStatusPTP[partipant.profileId] = "available"
+                }
             }
         });
 
@@ -86,8 +155,6 @@
         return sortedData
 
     }
-
-    $effect(() => console.log(connectedDevice))
 
 </script>
 
@@ -118,7 +185,7 @@
                                 onclick={() => registerDevice(
                                     db, 
                                     userMetaData[auth.currentUser!.uid]["name"],
-                                    sortedPartipants[0].name,
+                                    currentGroup,
                                     auth.currentUser!.uid, 
                                     partyId, 
                                     device
@@ -132,11 +199,56 @@
         </div>
         <br />
 
+        {#if groups.length > 0}
+            <p>Groups:</p>
+            <button>Go to another group!</button>
+            <div class="flex gap-2 p-4">
+                {#each groups as group, i}
+                    <div class="w-[500px] min-h-[200px] bg-slate-400 rounded-[15px]">
+                        <p class="font-bold py-2">Group #{i+1}</p>
+                        {#each group as person}
+                            {#if person.id == auth.currentUser!.uid }
+                                <p class="font-bold">You ({person.name})</p>
+                            {:else}
+                                <p>{person.name}</p>
+                            {/if}
+                        {/each}
+                    
+                        <br />
+                    
+                        {#if llmGeneratingStatus[i] == "available"}
+                            <button onclick={async () => {
+                                llmGeneratingStatus[i] = "generating"
+                                llmGeneratingStatus[i] = await callLLM(randomInterestGroup(groupsInterests[i]))
+                            }}>
+                                Generate sentence starter!
+                            </button>
+                        {:else if llmGeneratingStatus[i] == "generating"} 
+                            <p>Generating...</p>
+                        {:else} 
+                            <p>Sentence starter: {llmGeneratingStatus[i]}</p>
+                            <br />
+                            <button onclick={async () => {
+                                llmGeneratingStatus[i] = "generating"
+                                llmGeneratingStatus[i] = await callLLM(randomInterestGroup(groupsInterests[i]))
+                            }}>
+                                Generate Another!
+                            </button>
+                        {/if}
+
+                        <br /> 
+                    </div>
+                {/each}
+
+            </div>
+        {/if}
+
+        <br />
         <p>You should meet (most similar): </p>
         {#each sortedPartipants as partipant}
             <div class="p-4 rounded-[15px] bg-slate-100 m-4">
-                <p class="font-bold py-2">{partipant.name} ({Math.round(partipant.similarity*100)}% similarity)</p>
-                <div class="flex flex-row gap-4">
+                <p class="font-bold py-2">{partipant.name}</p>
+                <div class="flex flex-row gap-4 w-[400px]">
                     <div>
                         <p>Interests:</p>
                         {#each userMetaData[partipant.profileId].interests as interest}
@@ -149,6 +261,36 @@
                             <p class="mx-4">{interest}</p>
                         {/each}
                     </div>
+
+                    <div>
+                        {#if llmGeneratingStatusPTP[partipant.profileId] == "available"}
+                            <button onclick={async () => {
+                                llmGeneratingStatusPTP[partipant.profileId] = "generating"
+                                llmGeneratingStatusPTP[partipant.profileId] = await callLLM([
+                                    randomInterest(userMetaData[auth.currentUser!.uid]["interests"]),
+                                    randomInterest(userMetaData[partipant.profileId]["interests"]),
+                                ])
+                            }}>
+                                Generate sentence starter!
+                            </button>
+                        {:else if llmGeneratingStatusPTP[partipant.profileId] == "generating"} 
+                            <p>Generating...</p>
+                        {:else} 
+                            <p class="w-full">Sentence starter: {llmGeneratingStatusPTP[partipant.profileId]}</p>
+                            <br />
+                            <button onclick={async () => {
+                                llmGeneratingStatusPTP[partipant.profileId] = "generating"
+                                llmGeneratingStatusPTP[partipant.profileId] = await callLLM([
+                                    randomInterest(userMetaData[auth.currentUser!.uid]["interests"]),
+                                    randomInterest(userMetaData[partipant.profileId]["interests"]),
+                                ])
+                            }}>
+                                Generate Another!
+                            </button>
+                        {/if}
+                    </div>
+
+                    
                 </div>
             </div>
         {/each}
