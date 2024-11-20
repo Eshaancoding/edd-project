@@ -1,5 +1,4 @@
 <script lang="ts">
-    import {Button, TextFieldOutlined} from 'm3-svelte';
     import {signInUser } from "$lib/API/users"    
     import { auth } from "$lib/firebase"
     import { goto } from '$app/navigation';
@@ -46,15 +45,17 @@
 
 <form on:submit={loginClick}>
     <div class="flex flex-col gap-2 relative mx-auto max-w-96">
-        <TextFieldOutlined
+        <input
             bind:value={email}
             name="Email"
+            placeholder="Email"
             required
         />
-        <TextFieldOutlined
+        <input
             bind:value={password}
             name="Password"
-            extraOptions={{type: "password"}}
+            type="password"
+            placeholder="Password"
             required
         />
     
@@ -62,12 +63,7 @@
             <p class="text-red-500">{error}</p>
         {/if}
 
-        <Button
-            type="filled"
-            extraOptions={{type: "submit"}}
-        >
-            Log in
-        </Button>
+        <button type="submit">Log in</button>
     </div>
     
 </form>
