@@ -182,7 +182,7 @@
             <p>Groups:</p>
             <div class="flex gap-2 p-4">
                 {#each groups as group, i}
-                    <div class="w-[300px] h-[200px] bg-slate-400 rounded-[15px]">
+                    <div class="w-[500px] min-h-[200px] bg-slate-400 rounded-[15px]">
                         <p class="font-bold py-2">Group #{i+1}</p>
                         {#each group as person}
                             {#if person.id == auth.currentUser!.uid }
@@ -206,7 +206,12 @@
                         {:else} 
                             <p>Sentence starter: {llmGeneratingStatus[i]}</p>
                             <br />
-                            <button>Generate Another!</button>
+                            <button onclick={async () => {
+                                llmGeneratingStatus[i] = "generating"
+                                llmGeneratingStatus[i] = await callLLM(groupsInterests[i])
+                            }}>
+                                Generate Another!
+                            </button>
                         {/if}
 
                         <br /> 
@@ -249,9 +254,17 @@
                         {:else if llmGeneratingStatusPTP[partipant.profileId] == "generating"} 
                             <p>Generating...</p>
                         {:else} 
-                            <p>Sentence starter: {llmGeneratingStatusPTP[partipant.profileId]}</p>
+                            <p class="w-full">Sentence starter: {llmGeneratingStatusPTP[partipant.profileId]}</p>
                             <br />
-                            <button>Generate Another!</button>
+                            <button onclick={async () => {
+                                llmGeneratingStatusPTP[partipant.profileId] = "generating"
+                                llmGeneratingStatusPTP[partipant.profileId] = await callLLM([
+                                    ...userMetaData[auth.currentUser!.uid]["interests"],
+                                    ...userMetaData[partipant.profileId]["interests"],
+                                ])
+                            }}>
+                                Generate Another!
+                            </button>
                         {/if}
                     </div>
 
