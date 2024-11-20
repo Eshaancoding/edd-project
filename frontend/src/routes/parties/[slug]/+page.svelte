@@ -180,6 +180,7 @@
 
         {#if groups.length > 0}
             <p>Groups:</p>
+            <button>Go to another group!</button>
             <div class="flex gap-2 p-4">
                 {#each groups as group, i}
                     <div class="w-[500px] min-h-[200px] bg-slate-400 rounded-[15px]">

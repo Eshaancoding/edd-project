@@ -39,14 +39,14 @@ export async function callLLM(interests: string[]) {
         {
             "model": "mistralai/Mistral-7B-Instruct-v0.3",
             "messages": [
-                { "role": "system", "content": "Your job is create ONE question starter that discusses a common interests across multiple people. Just give the staring question. No explanation. Give ONE informal question starters, as it is an informal conversation." },
-                { "role": "user", "content": `The interests are ${interests.join(", ")}. Create ONE question starter off of these interests. Just give ONE staring question. No explanation. Give ONE informal question starters, as it is an informal conversation.` },
+                { "role": "system", "content": "Your job is to create ONE sentence starter for introverted people for informal conversations. " },
+                { "role": "user", "content": `The interests are ${interests.join(", ")}. Create informal JUST ONE sentence starter that focuses on one common interests. Give no explanation. Don't go over 20 words.` }
             ],
             "repetition_penalty": 1.1,
             "temperature": 0.7,
             "top_p": 0.9,
             "top_k": 40,
-            "max_tokens": 1024,
+            "max_tokens": 75,
             "stream": false
         },
         {
