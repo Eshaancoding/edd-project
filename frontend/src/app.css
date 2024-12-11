@@ -1,6 +1,8 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap');
+
 
 /* 1. Use a more-intuitive box-sizing model */
 *, *::before, *::after {
@@ -17,6 +19,7 @@ body {
   /* line-height: 1.5; */
   /* 4. Improve text rendering */
   -webkit-font-smoothing: antialiased;
+  font-family: "Hanken Grotesk", sans-serif;
 }
 
 /* 5. Improve media defaults */
@@ -50,3 +53,441 @@ h1, h2, h3, h4, h5, h6 {
   isolation: isolate;
 }
 
+
+
+
+/* Table of Contents
+
+  Global Styles
+  Form Input Styles
+    Clear Styles
+    Form Group
+    Outlined Input
+      Input Styles
+      Label Styles
+      Invalid Styles
+    Filled Input
+      Input Container
+      Input Styles
+      Label Styles
+      Underline Styles
+      Invalid Styles
+    Warning Styles
+  Layout
+    Main
+    Heading
+    Containers
+    Output
+
+*/
+
+/* ===================
+   Global Styles
+   =================== */
+
+:root {
+  --font-family-primary: "Roboto";
+  --font-family-secondary: "Roboto";
+  --text-color-primary: #000;
+  --text-color-secondary: #5f6368;
+  --input-border-color: #dadce0;
+  --container-light-background: #f1f3f4;
+
+  /* Input Colors */
+  /* --input-border-color-hover: #949597;
+  --input-theme-color: #1a73e8;
+  --input-border-color-focus: var(--input-theme-color);
+  --input-label-color-focus: var(--input-theme-color);
+  --input-caret-color: var(--input-theme-color); */
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  font-size: 16px;
+}
+
+/* ===================
+   Form Input Styles
+   =================== */
+
+   /* ===================
+      Clear Styles
+      =================== */
+input,
+button,
+textarea {
+  font-family: var(--font-family-secondary), sans-serif;
+  font-size: 1em;
+}
+
+textarea {
+  resize: none;
+  min-height: 3em;
+  max-height: 15em;
+}
+
+.form-group input:required,
+.form-group textarea:required {
+  box-shadow: none;
+}
+
+   /* ===================
+      Form Group
+      =================== */
+.form-group {
+  /* Theme Color */
+  --input-theme-color: #1a73e8;
+
+  /* Input  */
+  --input-font: var(--font-family-secondary);
+  --input-border-color-hover: #949597;
+  --input-border-color-focus: var(--input-theme-color);
+  --input-caret-color: var(--input-theme-color);
+
+  /* Label */
+  --input-label-font: var(--font-family-primary);
+  --input-label-color: #757a80;
+  --input-label-color-focus: var(--input-theme-color);
+
+  /* Invalid and Warning */
+  --input-invalid-color: #f72004;
+  --input-invalid-color-light: #ffebe9;
+  --input-invalid-color-hover: #ffdbd7;
+
+  /* display: block; */
+  position: relative;
+  font-size: 1em;
+  /* margin: 0.5em 0; */
+}
+
+   /* ===================
+      Outlined Input
+      =================== */
+
+     /* ===================
+        Input Styles
+        =================== */
+.form-group textarea {
+  width: 100%;
+  height: auto;
+  line-height: 1.5em;
+}
+
+.form-group input.outlined,
+.form-group textarea.outlined {
+  font-family: var(--input-font);
+  border: 0.0625em solid var(--input-border-color);
+  caret-color: var(--input-caret-color);
+  position: relative;
+  font-size: 1em;
+  padding: 0.6em 0.7em;
+  /* display: block; */
+  border-radius: 0.2em;
+  outline: none;
+  transition: border 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-group input.outlined {
+  width: 100%;
+}
+
+.form-group input.outlined:hover,
+.form-group textarea.outlined:hover {
+  border-color: var(--input-border-color-hover);
+}
+
+.form-group input.outlined:focus,
+.form-group textarea.outlined:focus {
+  border-color: var(--input-border-color-focus);
+}
+
+     /* ===================
+        Label Styles
+        =================== */
+.form-group input.outlined ~ label,
+.form-group textarea.outlined ~ label {
+  position: absolute;
+  font-family: var(--input-label-font);
+  max-width: calc(100% - 1.55em);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  user-select: none;
+  pointer-events: none;
+  background-color: #ffffff;
+  color: var(--input-label-color);
+  font-size: 1em;
+  padding: 0 0.15em;
+  left: 0.55em;
+  top: 0px;
+  transform-origin: left;
+  transform: translateY(calc(0.6em + 0.0625em));
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1), max-width 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-group input.outlined:focus ~ label,
+.form-group textarea.outlined:focus ~ label {
+  color: var(--input-label-color-focus);
+  transform: translateY(-50%) scale(0.75);
+}
+
+.form-group input.outlined:valid ~ label,
+.form-group textarea.outlined:valid ~ label {
+  transform: translateY(-50%) scale(0.75);
+}
+
+.form-group input.outlined:focus ~ label,
+.form-group textarea.outlined:focus ~ label,
+.form-group input.outlined:valid ~ label,
+.form-group textarea.outlined:valid ~ label {
+  max-width: calc((100% - 1.55em) / 0.75);
+}
+
+     /* ===================
+        Invalid Styles
+        =================== */
+.form-group[data-required] input.outlined:invalid:not(:focus),
+.form-group[data-required] textarea.outlined:invalid:not(:focus),
+.form-group[data-required] .invalid.outlined:not(:focus) {
+  border-color: var(--input-invalid-color);
+}
+
+.form-group[data-required] input.outlined:invalid:not(:focus) ~ label,
+.form-group[data-required] textarea.outlined:invalid:not(:focus) ~ label,
+.form-group[data-required] .invalid.outlined:not(:focus) ~ label {
+  transform: translateY(-50%) scale(0.75);
+  max-width: calc((100% - 1.55em) / 0.75);
+  color: var(--input-invalid-color);
+}
+
+   /* ===================
+      Filled Input
+      =================== */
+
+     /* ===================
+        Input Container
+        =================== */
+.form-group {
+  --label-space: 1.4375em;
+}
+
+.inputContainer {
+  position: relative;
+  width: max-content;
+}
+
+     /* ===================
+        Input Styles
+        =================== */
+.form-group input.filled,
+.form-group textarea.filled {
+  position: relative;
+  font-family: var(--input-font);
+  caret-color: var(--input-caret-color);
+  padding: var(--label-space) 1em 0.5625em;
+  border: none;
+  border-bottom: 0.0625em solid #949597;
+  background-color: #f5f7f8;
+  border-radius: 0.2em 0.2em 0 0;
+  transition: background-color 200ms ease;
+  outline: none;
+}
+
+.form-group input.filled {
+  width: 12.5em;
+}
+
+.form-group input.filled:hover,
+.form-group textarea.filled:hover,
+.form-group input.filled:focus,
+.form-group textarea.filled:focus  {
+  background-color: #eeeff0;
+}
+
+     /* ===================
+        Label Styles
+        =================== */
+.form-group input.filled ~ label,
+.form-group textarea.filled ~ label {
+  position: absolute;
+  max-width: calc(100% - 2em);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--input-label-font);
+  user-select: none;
+  pointer-events: none;
+  color: var(--input-label-color);
+  font-size: 1em;
+  left: 1em;
+  top: 0px;
+  transform-origin: bottom left;
+  transform: translateY(calc(var(--label-space) - 30%));
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1), color 200ms cubic-bezier(0.4, 0, 0.2, 1), max-width 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-group input.filled:focus ~ label,
+.form-group textarea.filled:focus ~ label {
+  color: var(--input-label-color-focus) !important;
+  transform: translateY(calc(var(--label-space) - 100%)) scale(0.75);
+}
+
+.form-group input.filled:valid ~ label,
+.form-group textarea.filled:valid ~ label {
+  transform: translateY(calc(var(--label-space) - 100%)) scale(0.75);
+}
+
+.form-group input.filled:focus ~ label,
+.form-group textarea.filled:focus ~ label,
+.form-group input.filled:valid ~ label,
+.form-group textarea.filled:valid ~ label {
+  max-width: calc((100% - 2em) / 0.75);
+}
+
+     /* ===================
+        Underline Styles
+        =================== */
+.form-group input.filled ~ .underline,
+.form-group textarea.filled ~ .underline {
+  position: absolute;
+  display: inline-block;
+  bottom: 0;
+  left: 50%;
+  background-color: var(--input-theme-color);
+  height: 0.12em;
+  width: 100%;
+  transform: translateX(-50%) scaleX(0);
+  transition: transform 200ms ease;
+}
+
+.form-group input.filled:focus ~ .underline,
+.form-group textarea.filled:focus ~ .underline {
+  transform: translateX(-50%) scaleX(1);
+}
+
+     /* ===================
+        Invalid Styles
+        =================== */
+.form-group[data-required] input.filled:invalid,
+.form-group[data-required] textarea.filled:invalid,
+.form-group[data-required] .invalid.filled {
+  background-color: var(--input-invalid-color-light);
+  border-bottom: 0.15em solid var(--input-invalid-color);
+}
+
+.form-group[data-required] input.filled:invalid ~ label,
+.form-group[data-required] textarea.filled:invalid ~ label,
+.form-group[data-required] .invalid.filled ~ label {
+  transform: translateY(calc(var(--label-space) - 100%)) scale(0.75);
+  max-width: calc((100% - 2em) / 0.75);
+  color: var(--input-invalid-color) !important;
+}
+
+.form-group[data-required] input.filled:invalid ~ .underline,
+.form-group[data-required] textarea.filled:invalid ~ .underline,
+.form-group[data-required] .invalid.filled ~ .underline {
+  background-color: var(--input-invalid-color);
+}
+
+   /* ===================
+      Warning Styles
+      =================== */
+.form-group[data-required] .warning {
+  color: var(--input-invalid-color);
+  font-size: 0.8em;
+  line-height: 1.5em;
+  margin-top: 0.2em;
+}
+
+.form-group[data-required] input:invalid:not(:focus) ~ .warning,
+.form-group[data-required] textarea:invalid:not(:focus) ~ .warning {
+  display: inline-block;
+}
+
+/* ===================
+   Layout
+   =================== */
+
+   /* ===================
+      Main
+      =================== */
+main {
+  /* padding: 2em 25%; */
+  padding: 2em 0;
+  width: clamp(20em, 60%, 40em);
+  margin: 0 auto;
+}
+
+   /* ===================
+      Heading
+      =================== */
+.heading {
+  margin-bottom: 1.5em;
+}
+
+.heading .headline {
+  line-height: 1.5em;
+  font-weight: 400;
+  font-size: 2.25em;
+}
+
+.heading .subheading {
+  font-family: var(--font-family-secondary);
+  color: var(--text-color-secondary);
+}
+
+   /* ===================
+      Controls
+      =================== */
+.controls {
+  margin-bottom: 1em;
+}
+.controls .rotNum {
+  width: min-content;
+  --input-theme-color: #8c00ff;
+}
+
+   /* ===================
+      Containers
+      =================== */
+.ROT13_container {
+  padding: 1em 2em;
+  box-shadow: 0px 0.0625em 0.2em 0px #3c40434d, 0px 0.125em 0.375em 0.125em #3c404326;
+  margin-bottom: 1.5em;
+  border-radius: 0.5em;
+}
+
+   /* ===================
+      Output
+      =================== */
+.outputContainer {
+  position: relative;
+  margin-top: 0.7em;
+  /* padding: 1em 1.2em; */
+  border-radius: 0.2em;
+  background-color: var(--container-light-background);
+}
+
+.outputLabel {
+  padding: 1em 1.2em 0.5em;
+}
+
+.outputLabel.scroll {
+  box-shadow: 0 0.4em 0.3em -0.3em #0003;
+}
+
+.output {
+  font-family: var(--font-family-secondary);
+  padding: 0 1.2em 1em;
+  line-height: 1.5em;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  max-height: 12em;
+  overflow-y: auto;
+}

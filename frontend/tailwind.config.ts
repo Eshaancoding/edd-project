@@ -4,7 +4,8 @@ export default {
   content: ['./src/**/*.{html,js,svelte,ts,tsx}'],
 
   theme: {
-    extend: {}
+    extend: {
+    }
   },
 
   plugins: []

@@ -27,57 +27,54 @@
     }
 </script>
 
-<h1 class="w-full text-center py-4 font-bold text-[22px]">Sign Up Page</h1>
+<style>
+    /* https://unsplash.com/photos/brown-soil-pathway-between-green-leaf-trees-in-aerial-photography-during-daytime-m3oLLB7w3Xg */
+    .bg-clouds {
+        background-image: url("$lib/images/forest.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+</style>
 
-<div class="flex flex-col gap-2 relative mx-4 ">
-    <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
-        Name:
-        <input bind:value={name} type="text" class="border-1 rounded-[10px] border-black px-2 py-1" />
+<div class="flex min-h-screen">
+    <div class="p-5 basis-2/5">
+        <div class="bg-clouds h-full rounded-3xl p-14 flex flex-col justify-between">
+            <div><a class="text-3xl font-bold text-white" href="/">LOGO</a></div>
+            <div class="text-5xl font-light text-white text-right leading-tight">Ask Hillel out for a date right now. This is a once in a lifetime opportunity!</div>
+        </div>
     </div>
 
-    <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
-        Email:
-        <input bind:value={email} type="text" class="border-1 rounded-[10px] border-black px-2 py-1" />
-    </div>
-
-    <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
-        Phone:
-        <input bind:value={phone} type="text" class="border-1 rounded-[10px] border-black px-2 py-1" />
-    </div>
-
-    <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
-        Password:
-        <input bind:value={password} type="password" class="border-1 rounded-[10px] border-black px-2 py-1" />
-    </div>
-
-    <br /> <br />
-
-    <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
-        Interests 1:
-        <input bind:value={interestOne} type="text" class="border-1 rounded-[10px] border-black px-2 py-1" />
-    </div>
-
-    <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
-        Interests 2:
-        <input bind:value={interestTwo} type="text" class="border-1 rounded-[10px] border-black px-2 py-1" />
-    </div>
-
-    <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
-        Interests 3:
-        <input bind:value={interestThree} type="text" class="border-1 rounded-[10px] border-black px-2 py-1" />
-    </div>
-
-    <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
-        Interests 4:
-        <input bind:value={interestFour} type="text" class="border-1 rounded-[10px] border-black px-2 py-1" />
-    </div>
-
-    <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
-        Interests 5:
-        <input bind:value={interestFive} type="text" class="border-1 rounded-[10px] border-black px-2 py-1" />
+    <div class="basis-3/5 px-5 pt-20">
+        <div class="flex flex-col gap-2 max-w-[400px] mx-auto">
+            <h1 class="text-5xl font-bold mb-4">Sign up</h1>
+            <div class="flex gap-2">
+                <div class="form-group">
+                    <input type="text" class="outlined" required>
+                    <label>First name</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="outlined" required>
+                    <label>Last name</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="text" class="outlined w-full" required>
+                <label>Email</label>
+            </div>
+            <div class="form-group">
+                <input type="password" class="outlined" required>
+                <label>Password</label>
+            </div>
+            <div class="form-group">
+                <input type="password" class="outlined" required>
+                <label>Confirm password</label>
+            </div>
+            <button class="color">Sign Up</button>
+        </div>
     </div>
 </div>
-
+<!-- 
 {#if signingUpStatus.length > 0}
     <div 
         class="relative left-[50%] -translate-x-[50%] px-4 text-center px-4 py-2 bg-slate-400 rounded-[15px] text-slate-600"
@@ -92,4 +89,4 @@
     >
         Sign up
     </button>
-{/if}
+{/if} -->
