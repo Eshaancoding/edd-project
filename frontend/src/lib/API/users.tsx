@@ -11,6 +11,7 @@ export async function signUpUser (
     email:string,
     phone:string,
     password:string,
+    bio:string,
     interests: string[],
     callbackStatus: (status:string) => void
 ) {
@@ -26,6 +27,7 @@ export async function signUpUser (
         name: name,
         email: email,
         phone: phone,
+        bio: bio,
         interests: interests,
         embedding: [ems],
     })

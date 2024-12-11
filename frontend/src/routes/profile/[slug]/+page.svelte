@@ -8,6 +8,7 @@
     let name = $state("")
     let interests = $state([] as string[])
     let phone = $state("")
+    let bio = $state("")
 
     $effect(() => { // load meta data
         async function start () {
@@ -17,6 +18,7 @@
             name = data.name
             email = data.email 
             interests = data.interests
+            bio = data.bio
         }
         if (auth.currentUser == null) goto("/")
         else if (email.length == 0) {
@@ -30,9 +32,11 @@
     {#if name == ""} 
         <div>Loading...</div>
     {:else}
-        <div>Name: {name}</div>
-        <div>Phone: {phone}</div>
-        <div>Email: {email}</div>
+        <div class="text-[24px] my-4">{name}</div>
+        <div><span class="font-bold">Phone:</span> {phone}</div>
+        <div><span class="font-bold">Email:</span> {email}</div>
+        <p><span class="font-bold">Bio:</span> {bio}</p>
+        
         <br />
         {#each interests as interest, i}
             <div>Interest #{i+1}: {interest}</div>

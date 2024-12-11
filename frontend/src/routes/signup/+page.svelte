@@ -14,9 +14,10 @@
     let interestThree = ""
     let interestFour = ""
     let interestFive = ""
+    let bio = ""
     
     async function signUpClick () {
-        await signUpUser(db, auth, name, email, phone, password, [
+        await signUpUser(db, auth, name, email, phone, password, bio, [
             interestOne,
             interestTwo,
             interestThree,
@@ -38,6 +39,11 @@
     <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
         Email:
         <input bind:value={email} type="text" class="border-1 rounded-[10px] border-black px-2 py-1" />
+    </div>
+
+    <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
+        Bio:
+        <textarea bind:value={bio} class="w-[300px] h-[100px] border-1 rounded-[10px] border-black px-2 py-1"></textarea>
     </div>
 
     <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
@@ -76,6 +82,8 @@
         Interests 5:
         <input bind:value={interestFive} type="text" class="border-1 rounded-[10px] border-black px-2 py-1" />
     </div>
+
+    
 </div>
 
 {#if signingUpStatus.length > 0}
