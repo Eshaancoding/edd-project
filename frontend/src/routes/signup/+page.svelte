@@ -14,9 +14,10 @@
     let interestThree = ""
     let interestFour = ""
     let interestFive = ""
+    let bio = ""
     
     async function signUpClick () {
-        await signUpUser(db, auth, name, email, phone, password, [
+        await signUpUser(db, auth, name, email, phone, password, bio, [
             interestOne,
             interestTwo,
             interestThree,
@@ -48,16 +49,6 @@
     <div class="basis-3/5 px-5 pt-20">
         <div class="flex flex-col gap-2 max-w-[400px] mx-auto">
             <h1 class="text-5xl font-bold mb-4">Sign up</h1>
-            <div class="flex gap-2">
-                <div class="form-group">
-                    <input type="text" class="outlined" required>
-                    <label>First name</label>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="outlined" required>
-                    <label>Last name</label>
-                </div>
-            </div>
             <div class="form-group">
                 <input type="text" class="outlined w-full" required>
                 <label>Email</label>
@@ -70,9 +61,25 @@
                 <input type="password" class="outlined" required>
                 <label>Confirm password</label>
             </div>
+            <div class="flex gap-2">
+                <div class="form-group">
+                    <input type="text" class="outlined" required>
+                    <label>First name</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="outlined" required>
+                    <label>Last name</label>
+                </div>
+            </div>
+            <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
+                Bio:
+                <textarea bind:value={bio} class="w-[300px] h-[100px] border-1 rounded-[10px] border-black px-2 py-1"></textarea>
+            </div>
+        
             <button class="color">Sign Up</button>
         </div>
-    </div>
+
+    
 </div>
 <!-- 
 {#if signingUpStatus.length > 0}

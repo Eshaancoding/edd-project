@@ -248,6 +248,8 @@
         {#each sortedPartipants as partipant}
             <div class="p-4 rounded-[15px] bg-slate-100 m-4">
                 <p class="font-bold py-2">{partipant.name}</p>
+                <p><span class="font-bold">Bio:</span> {userMetaData[partipant.profileId]["bio"]}</p>
+                <br />
                 <div class="flex flex-row gap-4 w-[400px]">
                     <div>
                         <p>Interests:</p>
