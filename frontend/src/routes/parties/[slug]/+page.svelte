@@ -240,6 +240,7 @@
 											llmGeneratingStatus[i] = "generating";
 											llmGeneratingStatus[i] = await callLLM(randomInterestGroup(groupsInterests[i]));
 										}}
+                                        class="bg-black hover:bg-gray-600 transition-colors text-white rounded-lg px-3 py-2"
 									>
 										Generate sentence starter!
 									</button>
@@ -253,6 +254,7 @@
 											llmGeneratingStatus[i] = "generating";
 											llmGeneratingStatus[i] = await callLLM(randomInterestGroup(groupsInterests[i]));
 										}}
+                                        class="bg-black hover:bg-gray-600 transition-colors text-white rounded-lg px-3 py-2"
 									>
 										Generate Another!
 									</button>
@@ -295,6 +297,7 @@
 												randomInterest(userMetaData[partipant.profileId]["interests"]),
 											]);
 										}}
+                                        class="bg-black hover:bg-gray-600 transition-colors text-white rounded-lg px-3 py-2"
 									>
 										Generate sentence starter!
 									</button>
@@ -311,6 +314,7 @@
 												randomInterest(userMetaData[partipant.profileId]["interests"]),
 											]);
 										}}
+                                        class="bg-black hover:bg-gray-600 transition-colors text-white rounded-lg px-3 py-2"
 									>
 										Generate Another!
 									</button>
