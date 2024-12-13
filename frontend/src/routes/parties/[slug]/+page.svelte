@@ -178,7 +178,7 @@
 					</p>
 				</div>
 
-				<div class="p-4 rounded-[15px] bg-slate-100">
+				<div class="p-4 rounded-[15px] bg-orange-100" class:bg-orange-200={connectedDevice.length > 0}>
 					{#if connectedDevice.length > 0}
 						<div class="flex flex-row justify-between">
 							<p class="py-2"><span class="font-bold">Connected Device: </span> {connectedDevice}</p>
@@ -187,7 +187,7 @@
 									unregisterDevice(db, connectedDevice);
 									connectedDevice = "";
 								}}
-								class="bg-blue-500 p-2 px-4 text-white rounded-[15px]"
+								class="bg-black hover:bg-gray-600 transition-colors text-white rounded-lg px-3 py-2"
 							>
 								Disconnect
 							</button>
@@ -196,7 +196,7 @@
 						<p class="font-bold py-2">Register Device</p>
 						<div class="flex flex-col gap-4">
 							{#each Object.keys(availableDevices) as device}
-								<div class="flex flex-row bg-slate-200 items-center w-full p-2 rounded-[15px] justify-between">
+								<div class="flex flex-row bg-orange-200/70 items-center w-full p-2 rounded-[15px] justify-between">
 									<p class="mx-2">{device}</p>
 									<button
 										onclick={() =>
@@ -208,7 +208,7 @@
 												partyId,
 												device
 											)}
-										class="bg-blue-500 p-2 px-4 text-white rounded-[15px]">Register</button
+										class="bg-black hover:bg-gray-600 transition-colors text-white rounded-lg px-3 py-2">Register</button
 									>
 								</div>
 							{/each}
@@ -222,7 +222,7 @@
 					<!-- <button>Go to another group!</button> -->
 					<div class="flex gap-2">
 						{#each groups as group, i}
-							<div class="w-[500px] bg-slate-100 p-4 rounded-[15px]">
+							<div class="w-[500px] bg-orange-100 p-4 rounded-[15px]">
 								<p class="font-bold py-2">Group #{i + 1}</p>
 								{#each group as person}
 									{#if person.id == currentUser!.uid}
@@ -267,7 +267,7 @@
 				<br />
 				<h2 class="text-2xl mb-4 mt-6">Similar to You</h2>
 				{#each sortedPartipants as partipant}
-					<div class="p-4 rounded-[15px] bg-slate-100 mb-4">
+					<div class="p-4 rounded-[15px] bg-orange-100 mb-4">
 						<p class="font-bold py-2">{partipant.name}</p>
 						<p><span class="font-bold">Bio:</span> {userMetaData[partipant.profileId]["bio"]}</p>
 						<br />

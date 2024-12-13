@@ -56,7 +56,7 @@
 <div class="pt-[64px] bg-orange-50">
 	<div class="container">
 		<div>
-            <h1 class="w-full py-4 text-[22px] text-4xl">
+            <h1 class="w-full py-4 text-4xl">
                 Hello {name}!
             </h1>
             <p>Attend a party. Start a conversation. Make new relationships.</p>
