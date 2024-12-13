@@ -78,8 +78,7 @@
         
             <button class="color">Sign Up</button>
         </div>
-
-    
+    </div>
 </div>
 <!-- 
 {#if signingUpStatus.length > 0}

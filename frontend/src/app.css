@@ -1,8 +1,13 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap');
 
+@layer components {
+    .container {
+      @apply max-w-[1320px] px-6 mx-auto;
+    }
+  }
 
 /* 1. Use a more-intuitive box-sizing model */
 *, *::before, *::after {
@@ -19,7 +24,7 @@ body {
   /* line-height: 1.5; */
   /* 4. Improve text rendering */
   -webkit-font-smoothing: antialiased;
-  font-family: "Hanken Grotesk", sans-serif;
+  font-family: "Mona Sans", sans-serif;
 }
 
 /* 5. Improve media defaults */
@@ -86,8 +91,8 @@ h1, h2, h3, h4, h5, h6 {
    =================== */
 
 :root {
-  --font-family-primary: "Roboto";
-  --font-family-secondary: "Roboto";
+  --font-family-primary: "Mona Sans";
+  --font-family-secondary: "Mona Sans";
   --text-color-primary: #000;
   --text-color-secondary: #5f6368;
   --input-border-color: #dadce0;
