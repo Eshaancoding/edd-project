@@ -1,6 +1,7 @@
 import { getDatabase, ref, push, onValue, get, update, set, Database, child } from 'firebase/database';
 import { generateId } from '../helper';
 
+// Encoding algorithm
 // A - B --> A - B
 // B - A --> A - B
 // not sure if this works per se
@@ -13,13 +14,13 @@ function encodePathForMsg (currentId: string, endUserId: string) {
     }
 }
 
+// Setup callback function whenever firebase updates (new message sent/received)
 export function onMessagingUpdate (
     db: Database, 
     currentId: string, 
     endUserId: string, 
     callback: (data: any) => void
 ) {
-  
   let ref_msg = ref(db, "messaging/" + encodePathForMsg(currentId, endUserId))
   onValue(ref_msg, (snapshot) => {
     let data = snapshot.val() || {a: []};
@@ -31,6 +32,7 @@ export function onMessagingUpdate (
   });
 }
 
+// Send message to the database from currentId to endUserId
 export function sendMessage (
     db: Database,
     currentId: string,

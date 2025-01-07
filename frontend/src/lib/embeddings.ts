@@ -1,5 +1,6 @@
 import axios from "axios"
 
+// call Jina Free API to embed interests
 export async function getEmbeddings(interests:string[]) {
     const url = 'https://api.jina.ai/v1/embeddings';
     const headers = {

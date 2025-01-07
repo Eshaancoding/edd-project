@@ -20,6 +20,9 @@ export let app = initializeApp(firebaseConfig);
 export let db = getDatabase(app);
 export let auth = getAuth(app)
 
+
+// ============ Legacy Code ============ 
+
 // User store
 // function createUserStore() {
 //     const { subscribe } = readable<User | null>(

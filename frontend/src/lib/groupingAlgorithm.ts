@@ -7,6 +7,8 @@ import { cosineSimilarity } from "./helper"
 
 const numberOfGroups = 2 // this could be custom
 
+// Given the party id, will get the list of participants and sort them into groups accordant to their similarity score (similar interests --> same groups)
+
 export async function grouping_algo (db: Database, partyId:string) {
   let partyData = await getParty(db, partyId) as any
 
@@ -42,7 +44,7 @@ export async function grouping_algo (db: Database, partyId:string) {
     }
   }
 
-  // get whether one person is alone
+  // Determine get whether one person is alone
   // idone --> 0
   // idtwo --> 1
   // idthree --> 1
@@ -61,6 +63,7 @@ export async function grouping_algo (db: Database, partyId:string) {
       let highest_similarity = 0      
       let closestIdx = -1
 
+      // Find alone paritipant that has the closest cosine similarity score (compatability with group) 
       for (let i = 0; i < participantsIDs.length; i++) {
         if (i != partipantIdx) {
           let potentialDataEmbeds = dataEmbeds[i]
@@ -82,6 +85,7 @@ export async function grouping_algo (db: Database, partyId:string) {
       }
     })
 
+  // Update firebase
   update(child(ref(db, "parties"), partyId), {
     clusterResult: clusterResult
   })

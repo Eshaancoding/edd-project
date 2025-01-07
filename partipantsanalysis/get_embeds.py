@@ -8,6 +8,18 @@ from tqdm import tqdm
 # get the embeddings
 
 def get_embeddings(interests):
+    """
+    Fetches embeddings from the Jina API for the given interests.
+
+    Args:
+        interests (list): A list of interests (strings).
+
+    Returns:
+        list or None: A list of embeddings if the request is successful, None otherwise.
+    """
+
+    interests = [interest.strip().lower() for interest in interests if interest.strip()]
+
     url = 'https://api.jina.ai/v1/embeddings'
     headers = {
         'Content-Type': 'application/json',
@@ -43,6 +55,7 @@ def get_embeddings(interests):
 # embedding dict
 embedding_dict = {}
 
+# Iterate over each people in .csv and call the embedding. Once done, add to dictionary
 with open("./people.csv", 'r') as file:
     dictReader = csv.DictReader(file)
     for row in tqdm(dictReader, total=43):
@@ -60,5 +73,6 @@ with open("./people.csv", 'r') as file:
 
         sleep(0.5)
 
+# Save dictonary as a file
 with open("./embeddings.pickle", "wb") as f:
     pickle.dump(embedding_dict, f)
