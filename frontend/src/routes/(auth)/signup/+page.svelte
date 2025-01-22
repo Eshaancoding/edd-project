@@ -43,8 +43,7 @@
 <div class="flex min-h-screen">
     <div class="p-5 basis-2/5">
         <div class="bg-clouds h-full rounded-3xl p-14 flex flex-col justify-between">
-            <div><a class="text-3xl font-bold text-white" href="/">LOGO</a></div>
-            <div class="text-5xl font-light text-white text-right leading-tight">Ask Hillel out for a date right now. This is a once in a lifetime opportunity!</div>
+            <div class="text-5xl font-light text-white text-right leading-tight">Make the first step to break out of your comfort zone!</div>
         </div>
     </div>
 
