@@ -1,3 +1,5 @@
+// Parties.ts 
+
 import { getDatabase, ref, push, onValue, get, update, set, Database, child } from 'firebase/database';
 import { generateId } from '../helper';
 

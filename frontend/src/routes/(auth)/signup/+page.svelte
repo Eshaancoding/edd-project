@@ -1,3 +1,5 @@
+<!-- Sign up page -->
+
 <script lang="ts">
     import { goto } from "$app/navigation";
     import {signUpUser} from "$lib/API/users"    

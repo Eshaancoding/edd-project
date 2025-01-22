@@ -1,3 +1,5 @@
+// Devices.ts
+
 import { getDatabase, ref, push, child, get, update, Database, DataSnapshot, set, onValue } from 'firebase/database';
 import { generateId } from '../helper';
 import { type Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';

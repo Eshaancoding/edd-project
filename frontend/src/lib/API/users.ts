@@ -1,3 +1,5 @@
+// Users.ts
+
 import { getDatabase, ref, push, child, get,  Database, DataSnapshot, set } from 'firebase/database';
 import { generateId } from '../helper';
 import { type Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';

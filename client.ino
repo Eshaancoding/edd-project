@@ -129,7 +129,7 @@ void loop() {
         tft.fillRect(CenterX - 40, CenterY - 20, 80, 40, TFT_GREEN); // draw rectangle if group number 2
         break;
       default: 
-        // tft.fillCircle(CenterX, CenterY, 30, shapeColor);
+        tft.fillCircle(CenterX, CenterY, 30, shapeColor);
         break;
     }
 

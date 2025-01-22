@@ -1,3 +1,5 @@
+<!-- Layout in routes/(default)/+layout.svelte -->
+
 <script lang="ts">
 	// let { children } = $props();
 </script>

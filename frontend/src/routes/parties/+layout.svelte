@@ -1,3 +1,4 @@
+<!-- Layout for viewing all parties -->
 <script lang="ts">
 	// let { children } = $props();
     import { signOut } from "firebase/auth";

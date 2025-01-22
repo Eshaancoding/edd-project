@@ -1,3 +1,4 @@
+// helper.ts
 // Generate random 6-letter/digit id.
 export function generateId () {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
