@@ -53,7 +53,7 @@
 	}
 </script>
 
-<div class="pt-[64px] bg-orange-50">
+<div class="pt-[64px] bg-orange-50 min-h-screen">
 	<div class="container">
 		<div>
             <h1 class="w-full py-4 text-4xl">

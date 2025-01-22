@@ -160,7 +160,7 @@
 	}
 </script>
 
-<div class="pt-[64px] pb-8 bg-orange-50">
+<div class="pt-[64px] pb-8 bg-orange-50 min-h-screen">
 	<div class="container">
 		{#if Object.keys(partyInfo).length > 0}
 			<div class="flex flex-col">

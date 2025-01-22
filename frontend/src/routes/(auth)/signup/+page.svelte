@@ -9,21 +9,11 @@
     let email = ""
     let phone = ""
     let password = ""
-    let interestOne = ""
-    let interestTwo = ""
-    let interestThree = ""
-    let interestFour = ""
-    let interestFive = ""
+    let interests = [] as string[]
     let bio = ""
     
     async function signUpClick () {
-        await signUpUser(db, auth, name, email, phone, password, bio, [
-            interestOne,
-            interestTwo,
-            interestThree,
-            interestFour,
-            interestFive
-        ], (status:string) => { signingUpStatus = status })
+        await signUpUser(db, auth, name, email, phone, password, bio, interests, (status:string) => { signingUpStatus = status })
         goto("/parties")
     }
 </script>
@@ -38,7 +28,7 @@
     }
 </style>
 
-<div class="flex min-h-screen">
+<div class="flex bg-orange-50 min-h-screen pt-[200px] pb-8">
     <div class="p-5 basis-2/5">
         <div class="bg-clouds h-full rounded-3xl p-14 flex flex-col justify-between">
             <div><a class="text-3xl font-bold text-white" href="/">LOGO</a></div>
@@ -47,37 +37,33 @@
     </div>
 
     <div class="basis-3/5 px-5 pt-20">
-        <div class="flex flex-col gap-2 max-w-[400px] mx-auto">
+        <form class="flex flex-col gap-2 max-w-[400px] mx-auto" on:submit={signUpClick}>
             <h1 class="text-5xl font-bold mb-4">Sign up</h1>
             <div class="form-group">
-                <input type="text" class="outlined w-full" required>
+                <input type="text" class="outlined w-full" bind:value={email} required>
                 <label>Email</label>
             </div>
             <div class="form-group">
-                <input type="password" class="outlined" required>
+                <input type="password" class="outlined" bind:value={password} required>
                 <label>Password</label>
             </div>
             <div class="form-group">
-                <input type="password" class="outlined" required>
-                <label>Confirm password</label>
+                <input type="text" class="outlined w-full" bind:value={name} required>
+                <label>Name</label>
             </div>
-            <div class="flex gap-2">
+            <div class="form-group">
+                <textarea class="outlined" rows="3" bind:value={bio} required></textarea>
+                <label>Bio</label>
+            </div>
+            {#each {length: 5} as _, i}
                 <div class="form-group">
-                    <input type="text" class="outlined" required>
-                    <label>First name</label>
+                    <input type="text" class="outlined" bind:value={interests[i]} required>
+                    <label>Interest {i+1}</label>
                 </div>
-                <div class="form-group">
-                    <input type="text" class="outlined" required>
-                    <label>Last name</label>
-                </div>
-            </div>
-            <div class="flex gap-2 items-center border-2 w-[350px] border-slate-200 rounded-[10px] px-2 py-1">
-                Bio:
-                <textarea bind:value={bio} class="w-[300px] h-[100px] border-1 rounded-[10px] border-black px-2 py-1"></textarea>
-            </div>
+            {/each}
         
-            <button class="color">Sign Up</button>
-        </div>
+            <button type="submit" class="bg-black hover:bg-gray-700 transition-colors text-white rounded-lg px-3 py-2">Sign up</button>
+        </form>
     </div>
 </div>
 <!-- 
