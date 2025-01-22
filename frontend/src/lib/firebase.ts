@@ -19,38 +19,3 @@ const firebaseConfig = {
 export let app = initializeApp(firebaseConfig);
 export let db = getDatabase(app);
 export let auth = getAuth(app)
-
-// User store
-// function createUserStore() {
-//     const { subscribe } = readable<User | null>(
-//       undefined,
-//       set => onAuthStateChanged(auth, set)
-//     )
-  
-//     const known = new Promise<void>(resolve => {
-//       let unsub = () => { }
-//       unsub = subscribe(user => {
-//         if (user !== undefined) {
-//           resolve()
-//           unsub()
-//         }
-//       })
-//     })
-    
-//     return { subscribe, known }
-//   }
-  
-//   export const user = createUserStore
-
-
-// Use this
-/*
-    // Firebase Auth
-    let currentUser = $state(undefined as Object | undefined | null);
-    onMount(() => {onAuthStateChanged(auth, (user) => {
-        if (user === null) goto("/login")
-        else {
-            currentUser = user;
-        }
-    })})
-*/

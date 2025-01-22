@@ -172,10 +172,6 @@
 						</button>
 					</div>
 					<p>@ {partyInfo.location}</p>
-					<p class="text-gray-400">
-						Lorem ipsum dolor, si t amet consectetur adipisicing elit. Provident fugit dolorem reiciendis quidem exercitationem cum saepe
-						tempore tenetur sequi voluptatem. Animi nesciunt quos voluptate optio impedit recusandae quasi expedita eligendi!{partyInfo.description}
-					</p>
 				</div>
 
 				<div class="p-4 rounded-[15px] bg-orange-100" class:bg-orange-200={connectedDevice.length > 0}>

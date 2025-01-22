@@ -1,11 +1,11 @@
-// WiFi + Firebase
+// Libraries WiFi + Firebase
 #include <Arduino.h>
 #include <WiFi.h>
 #include <FirebaseClient.h>
 #include <WiFiClientSecure.h>
 #include <FirebaseJson.h>
 
-// includes for TFT + others
+// Libraries for TFT (communication protocol/library for displaying text/shapes on screen) + others
 #include <SPI.h>
 #include <TFT_eSPI.h> // Graphics and font library for ST7735 driver chip
 #include "HTTPClient.h"
@@ -21,42 +21,47 @@
 #define DATABASE_SECRET "AIzaSyCt4_VJ1h6DndF1143QZnUqngXGxTJzSPU"
 #define DATABASE_URL "https://edd-project-f9d25-default-rtdb.firebaseio.com"
 
+// Initialize Wifi classes for firebase
 WiFiClientSecure ssl;
 DefaultNetwork network;
 AsyncClientClass client(ssl, getNetwork(network));
 
+// Initialize firebase client for connection
 FirebaseApp app;
 RealtimeDatabase Database;
 AsyncResult result;
 LegacyToken dbSecret(DATABASE_SECRET);
 
-// Other variables for disable
+// Device id 
 const char* device_id = "be231c";
 
+// WiFi name and password (we use phone hotspot)
 String ssid = "eshaan";
 String password = "765ESHAAN";
 
-String first = "";
-String second = "";
-
+// Initialize library to draw to screen
 TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup.h
 
 void setup(void) {
-  Serial.begin(115200);
+  Serial.begin(115200); // Initialize Serial monitor for debugging
 
-  pinMode(PIN_POWER_ON, OUTPUT);
+  // ESP32 have pins you have to turn high if you want to power it on
+  pinMode(PIN_POWER_ON, OUTPUT); 
   digitalWrite(PIN_POWER_ON, HIGH);
 
+  // more initialize to screen
   tft.init();
   tft.setRotation(3);
   tft.fillScreen(TFT_BLACK);
 
+  // Connect to wifi
   WiFi.disconnect();
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid.c_str(), password.c_str());
   delay(2000);
   int tries = 1;
   while (WiFi.status() != WL_CONNECTED) {
+    // Display # of attempts in the TFT screen
     std::string msg = "#";
     msg += std::to_string(tries);
     msg += " Wifi Connection Failed";
@@ -80,6 +85,7 @@ void setup(void) {
   tft.println("Firebase + WiFi Successfully Connected.");
 }
 
+// access values given a specific key (param) of a json object.
 std::string retStrJSON (FirebaseJson json, std::string param) {
   FirebaseJsonData result;
   json.get(result, param.c_str());
@@ -94,6 +100,7 @@ void loop() {
   FirebaseJson json_result;
   json_result.setJsonData(string_res.c_str());
 
+  // get specific attributes from data.
   std::string display = retStrJSON(json_result, "display");
   std::string name = retStrJSON(json_result, "name");
   std::string partyId = retStrJSON(json_result, "partyId");
@@ -104,33 +111,35 @@ void loop() {
   tft.setTextColor(TFT_WHITE, TFT_WHITE); 
 
   if (partyId != "None" && userId != "None") { // we have a valid id
+    // Draw name
     tft.drawCentreString(name.c_str(), 170, 50, 4);
-
     int CenterX = 170;
     int CenterY = 120;
     
+    // Draw symbol related to the group number (display attribute)
     int groupNumber = std::stoi(display);
     switch (groupNumber) {
       case 0: 
-        tft.fillRect(CenterX - 25, CenterY - 25, 50, 50, TFT_RED);
+        tft.fillRect(CenterX - 25, CenterY - 25, 50, 50, TFT_RED); // draw rect if group number 0
         break;
       case 1: 
-        tft.fillTriangle(CenterX, CenterY - 30, CenterX - 30, CenterY + 30, CenterX + 30, CenterY + 30, TFT_BLUE);
+        tft.fillTriangle(CenterX, CenterY - 30, CenterX - 30, CenterY + 30, CenterX + 30, CenterY + 30, TFT_BLUE); // draw triangle if group number 1
         break;
       case 2: 
-        tft.fillRect(CenterX - 40, CenterY - 20, 80, 40, TFT_GREEN);
+        tft.fillRect(CenterX - 40, CenterY - 20, 80, 40, TFT_GREEN); // draw rectangle if group number 2
         break;
       default: 
-        // tft.fillCircle(CenterX, CenterY, 30, shapeColor);
+        tft.fillCircle(CenterX, CenterY, 30, shapeColor);
         break;
     }
 
-    delay(3000); // ping server every 3 seconds to update
-  } else { // else, just draw the device id
-
+    delay(3000); // ping server every 3 seconds to update information
+  } else { 
+    // we do not have a valid id; wait and ping server every 3 seconds to update any valid id. Else, just draw the device id
     tft.drawCentreString("Device ID:", 170, 60, 4);
     tft.drawCentreString(device_id, 170, 100, 4);
-    delay(3000); // ping server every 1 seconds to update whether connected or not
+
+    delay(3000); // ping server every 3 seconds to update whether we have a valid id or not
   }
 }
 
@@ -168,4 +177,5 @@ void loop() {
 //   all copies or substantial portions of the Software.
 // */
 // // ESP32 open server on port 10000 to receive a flaot
+
 

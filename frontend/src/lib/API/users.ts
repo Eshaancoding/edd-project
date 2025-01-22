@@ -1,9 +1,12 @@
+// Users.ts
+
 import { getDatabase, ref, push, child, get,  Database, DataSnapshot, set } from 'firebase/database';
 import { generateId } from '../helper';
 import { type Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getEmbeddings } from "$lib/embeddings"
 import { FirebaseError } from 'firebase/app';
 
+// Sign up user with interests and store in firebase metadata and authentication server
 export async function signUpUser (
     db:Database, 
     auth:Auth,
@@ -33,6 +36,7 @@ export async function signUpUser (
     })
 }
 
+// sign in with email and password
 export async function signInUser (
     auth: Auth,
     email: string,

@@ -40,10 +40,22 @@
 <div class="flex flex-col gap-2">
     {#each msgs.slice().reverse() as msg}
         <div class="px-4">
-            <div class="flex flex-row gap-2 px-4 py-2 rounded-md bg-slate-100">
+            <div class="flex flex-row gap-2 px-4 py-2 rounded-md bg-slate-100 example">
                 <p class="font-bold">{msg.from == auth.currentUser!.uid ? "You:" : name + ": "}</p>
                 <p>{msg.msg}</p> 
             </div> 
         </div>
     {/each}
 </div>
+
+<!-- 
+If we were not to use TailwindCSS, we would have to do 
+
+Example {
+    flex-direction: row;
+    padding-x: 2px;
+    ...
+}
+
+Very cumbersome!
+-->

@@ -1,3 +1,5 @@
+// Devices.ts
+
 import { getDatabase, ref, push, child, get, update, Database, DataSnapshot, set, onValue } from 'firebase/database';
 import { generateId } from '../helper';
 import { type Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
@@ -5,8 +7,7 @@ import { FirebaseError } from 'firebase/app';
 
 // if connected to device, it will return a string (the device id). 
 // If it not, it will return an Object
-
-
+// Setup callback function whenever firebase updates (new device available/taken)
 export async function onAvailableDevices (
     db: Database, 
     userId: string,
@@ -32,6 +33,7 @@ export async function onAvailableDevices (
     }) 
 }
 
+// Update firebase database to unregister device
 export async function unregisterDevice (
     db: Database,
     deviceId: string
@@ -47,6 +49,7 @@ export async function unregisterDevice (
     await set(ref(db, "devices"), data)
 }
 
+// Update firebase database to register device
 export async function registerDevice (
     db: Database,
     name: string,
@@ -67,6 +70,7 @@ export async function registerDevice (
     await set(ref(db, "devices"), data)
 }
 
+// Update the display name for the current (connected) device id.
 export async function updateDisplayName (
     db: Database,
     deviceId: string,

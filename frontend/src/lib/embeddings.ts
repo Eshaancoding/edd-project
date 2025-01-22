@@ -1,5 +1,8 @@
+// Embedding.ts
+
 import axios from "axios"
 
+// call Jina Free API to embed interests
 export async function getEmbeddings(interests:string[]) {
     const url = 'https://api.jina.ai/v1/embeddings';
     const headers = {
@@ -28,11 +31,6 @@ export async function getEmbeddings(interests:string[]) {
             for (let j = 0; j < 1024; j++) {
                 ems[j] += d[i].embedding[j]; // Accumulate embedding values
             }
-        }
-
-        // Average the embeddings (divide each element by 5 as in original code)
-        for (let i = 0; i < 1024; i++) {
-            ems[i] /= 5;
         }
 
         return ems; // Return the final embeddings array

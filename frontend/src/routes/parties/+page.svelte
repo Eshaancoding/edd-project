@@ -1,3 +1,4 @@
+<!-- +page.svelte for viewing all parties -->
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import { joinParty, onPartiesList, leaveParty } from "$lib/API/parties";

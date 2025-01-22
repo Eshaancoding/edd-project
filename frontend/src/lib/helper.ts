@@ -1,3 +1,5 @@
+// helper.ts
+// Generate random 6-letter/digit id.
 export function generateId () {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let id = '';
@@ -7,6 +9,8 @@ export function generateId () {
   }
   return id;
 }
+
+// Cosine similarity to determine how close vectors are (used as how similar two groups of people are)
 
 export function cosineSimilarity(arrayOne: number[], arrayTwo: number[]): number {
     // Step 1: Calculate the dot product of the two arrays

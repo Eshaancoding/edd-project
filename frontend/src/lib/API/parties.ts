@@ -1,6 +1,9 @@
+// Parties.ts 
+
 import { getDatabase, ref, push, onValue, get, update, set, Database, child } from 'firebase/database';
 import { generateId } from '../helper';
 
+// Setup callback function whenever firebase updates (new party created/deleted)
 export function onPartiesList(db: Database, callback: (data: any) => void) {
   let ref_parties = ref(db, "parties");
   onValue(ref_parties, (snapshot) => {
@@ -11,6 +14,7 @@ export function onPartiesList(db: Database, callback: (data: any) => void) {
   return get(ref_parties);
 }
 
+// Create a party and update in firebase
 export function createParty (
   db: Database, 
   name: string, 
@@ -59,6 +63,7 @@ export async function joinParty(
   }
 }
 
+// Leave the current party (remove user id from partipants list)
 export async function leaveParty (db: Database, partyId: string, profileId:string) {
   const ref_party = child(ref(db, "parties"), partyId)
   let snapshot = (await get(ref_party)).val()
@@ -75,6 +80,7 @@ export async function leaveParty (db: Database, partyId: string, profileId:strin
   await set(ref_party, snapshot)
 }
 
+// Get full list of parties as a array of dictionary 
 export async function getParty (db: Database, partyId: string) {
   const ref_party = child(ref(db, "parties"), partyId);
   try {

@@ -1,3 +1,5 @@
+<!-- Login page -->
+
 <script lang="ts">
     import {signInUser } from "$lib/API/users"    
     import { auth } from "$lib/firebase"
