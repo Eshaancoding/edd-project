@@ -1,4 +1,3 @@
-// groupingAlgorithm.ts
 
 import { kmeans } from "ml-kmeans"
 import { getParty } from "./API/parties"
@@ -7,16 +6,6 @@ import { child, ref, update, Database } from "firebase/database"
 import { cosineSimilarity } from "./helper"
 
 const numberOfGroups = 2 // this could be custom
-
-// Given the party id, will get the list of participants and sort them into groups accordant to their similarity score (similar interests --> same groups)
-
-export function mag (vec:number[]) {
-  let val = 0
-  for (let i = 0; i < vec.length; i++) {
-    val += vec[i] * vec[i];
-  } 
-  return Math.sqrt(val)
-}
 
 export async function grouping_algo (db: Database, partyId:string) {
   let partyData = await getParty(db, partyId) as any
@@ -53,7 +42,7 @@ export async function grouping_algo (db: Database, partyId:string) {
     }
   }
 
-  // Determine get whether one person is alone
+  // get whether one person is alone
   // idone --> 0
   // idtwo --> 1
   // idthree --> 1
@@ -72,7 +61,6 @@ export async function grouping_algo (db: Database, partyId:string) {
       let highest_similarity = 0      
       let closestIdx = -1
 
-      // Find alone paritipant that has the closest cosine similarity score (compatability with group) 
       for (let i = 0; i < participantsIDs.length; i++) {
         if (i != partipantIdx) {
           let potentialDataEmbeds = dataEmbeds[i]
@@ -94,7 +82,6 @@ export async function grouping_algo (db: Database, partyId:string) {
       }
     })
 
-  // Update firebase
   update(child(ref(db, "parties"), partyId), {
     clusterResult: clusterResult
   })
