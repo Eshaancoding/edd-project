@@ -36,7 +36,7 @@ export async function grouping_algo (db: Database, partyId:string) {
   let dataEmbeds = [] as any[]
   for (let i = 0; i < participantsIDs.length; i++) {
     let retData = await getUserMetadata(db, participantsIDs[i])
-    dataEmbeds.push(retData.embedding[0]/mag(retData.embedding[0]))
+    dataEmbeds.push(retData.embedding[0])
   }
 
   let kmeans_result = kmeans(dataEmbeds, numberOfGroups, {} ) 
