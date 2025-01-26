@@ -45,7 +45,7 @@
             <div class="flex flex-col lg:flex-row items-center">
                 <div class="lg:basis-1/2 text-center lg:text-left">
                     <h1 class="font-serif text-7xl font-light text-yellow-100 mb-4">Instructions.</h1>
-                    <p class="text-base text-white/50 w-1/2 lg:w-3/4 mb-6 mx-auto lg:mx-0">Make sure you have already set up your device first by following the instructions that were given in the product box.</p>
+                    <p class="text-base text-white/50 w-full md:w-3/4 mb-6 mx-auto lg:mx-0">Make sure you have already set up your device first by following the instructions that were given in the product box.</p>
                 </div>
             </div>
             <div></div>
