@@ -50,7 +50,7 @@
     <img src={Five} class="w-[800px]" alt="Five" />    
     <p>6. You can register a device now. Look at your device and read the Device ID. On the website, click “Register” to connect your profile with the device. After registering, your name and a colored shape should show up on the device. If you see your colored shape on another person’s name tag, it means they have similar interests to you!</p>
     <img src={Six} class="w-[800px]" alt="Six" />
-    <div class="flex"> 
+    <div class="flex w-[800px]"> 
         <div class="flex flex-col">
             <img src={Before} alt="before" />
             <p class="w-full text-center py-4 text-[18px]">Before Registration</p>
