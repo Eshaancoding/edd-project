@@ -39,7 +39,7 @@
     </div>
 
     <p>1. Navigate to <a class="underline" href="https://edd-black.vercel.app">https://edd-black.vercel.app</a> </p>
-    <img src={One} alt="One" />    
+    <img src={One} class="w-[800px]" alt="One" />    
     <p>2. Click the "Log In" or "Sign Up" button in the upper right corner.</p>
     <img src={Two} class="w-[400px]" alt="Two" />    
     <p>3. After logging in or signing up and making a profile with your credentials, you will see your dashboard.</p>
