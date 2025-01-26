@@ -7,7 +7,7 @@
 	import { grouping_algo } from "$lib/groupingAlgorithm";
 	import { error } from "@sveltejs/kit";
 	import { onMount } from "svelte";
-	import { onAuthStateChanged, getAuth } from "firebase/auth";
+	import { onAuthStateChanged } from "firebase/auth";
 	import type { PageData } from "./$types";
 
 	// export let data;
@@ -20,8 +20,8 @@
 
 	onMount(() => {
 		onAuthStateChanged(auth, (user) => {
-			if (user === null) goto("/login");
-			else {
+            // console.log(user)
+			if (user !== null) {
 				getUserMetadata(db, user!.uid).then((value: any) => (name = value.name));
 
 				onPartiesList(db, (data: any) => {

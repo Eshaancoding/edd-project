@@ -1,7 +1,7 @@
 <!-- Layout of login and signup -->
 
 <script lang="ts">
-	// let { children } = $props();
+    
 </script>
 
 <style>

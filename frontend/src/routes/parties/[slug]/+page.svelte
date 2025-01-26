@@ -164,15 +164,17 @@
 	<div class="container">
 		{#if Object.keys(partyInfo).length > 0}
 			<div class="flex flex-col">
-				<div class="flex flex-col gap-2 mt-4 mb-6 max-w-[700px]">
-					<div class="flex flex-row justify-between">
-						<h1 class="text-4xl">{partyInfo.name}</h1>
-						<button onclick={() => leaveP(partyId)} class="hover:bg-red-600/10 transition-colors text-red-600 rounded-lg px-3 py-2">
-							Leave Party
-						</button>
-					</div>
-					<p>@ {partyInfo.location}</p>
-				</div>
+				<div class="flex flex-row justify-between items-start mt-4 mb-6">
+                    <div class="flex flex-col gap-2 max-w-[700px]">
+                        <div class="flex flex-row justify-between">
+                            <h1 class="text-4xl">{partyInfo.name}</h1>
+                        </div>
+                        <p>@ {partyInfo.location}</p>
+                    </div>
+                    <button onclick={() => leaveP(partyId)} class="hover:bg-red-600/10 transition-colors text-red-600 rounded-lg px-3 py-2">
+                        Leave Party
+                    </button>
+                </div>
 
 				<div class="p-4 rounded-[15px] bg-orange-100" class:bg-orange-200={connectedDevice.length > 0}>
 					{#if connectedDevice.length > 0}

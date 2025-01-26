@@ -18,8 +18,15 @@ export async function signUpUser (
     interests: string[],
     callbackStatus: (status:string) => void
 ) {
+    let errorCode = "";
     callbackStatus("Setting up authentication...") 
-    let data = await createUserWithEmailAndPassword(auth, email, password) 
+    let data = await createUserWithEmailAndPassword(auth, email, password).catch((reason:any) => {
+        errorCode = reason.code;
+    });
+    if (errorCode.length > 0) {
+        callbackStatus("")
+        return errorCode;
+    }
     
     callbackStatus("Calculating embeddings...") 
     let ems = await getEmbeddings(interests)
@@ -34,6 +41,8 @@ export async function signUpUser (
         interests: interests,
         embedding: [ems],
     })
+
+    return data;
 }
 
 // sign in with email and password
@@ -47,6 +56,7 @@ export async function signInUser (
     let result = await signInWithEmailAndPassword(auth, email, password).catch((reason:any) => {
         errorCode = reason.code
     });
+
     return errorCode.length > 0 ? errorCode : result
 }
 

@@ -1,8 +1,9 @@
 <!-- Layout for viewing all parties -->
 <script lang="ts">
-	// let { children } = $props();
-    import { signOut } from "firebase/auth";
-    import { auth } from "$lib/firebase"
+    import { onMount } from "svelte";
+	import { auth } from "$lib/firebase";
+    import { goto } from "$app/navigation";
+	import { signOut, onAuthStateChanged } from "firebase/auth";
     
     function signOutLink() {
         signOut(auth).then(() => {
@@ -11,6 +12,16 @@
             // An error happened.
         });
     }
+
+    onMount(() => {
+		onAuthStateChanged(auth, (user) => {
+            // console.log(user)
+			if (user === null) goto("/login");
+			else {
+
+			}
+		});
+	});
 </script>
 
 <style>
@@ -23,6 +34,7 @@
     <div class="w-full container flex flex-row justify-between">
         <a class="text-2xl font-bold text-white align-middle content-center" href="/parties">IntroTag</a>
         <div class="nav-links flex flex-row gap-4 items-center text-white/70">
+            <a href="/instructions" class="">Instructions</a>
             <button on:click={signOutLink}>Sign Out</button>
         </div>
     </div>
