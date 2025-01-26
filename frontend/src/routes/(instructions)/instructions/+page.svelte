@@ -67,12 +67,12 @@
         <div class="deviceImages">
             <div class="inline-flex flex-col">
                 <img src={Before} alt="before" />
-                <p class="w-full text-white/50 text-center py-1 text-sm">Before Registration</p>
+                <p class="w-full text-white/50 text-center text-sm">Before Registration</p>
             </div>
     
             <div class="inline-flex flex-col">
                 <img src={After} alt="After" />
-                <p class="w-full text-white/50 text-center py-1 text-sm">After Registration</p>
+                <p class="w-full text-white/50 text-center text-sm">After Registration</p>
             </div>
         </div>
     
